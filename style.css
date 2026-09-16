@@ -1,0 +1,926 @@
+/* =====================================================
+   HABITGRID
+   ===================================================== */
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+
+    font-family: Arial, sans-serif;
+
+    background: #0d1117;
+
+    color: #e6edf3;
+
+    min-height: 100vh;
+}
+
+
+button,
+input {
+    font-family: inherit;
+}
+
+
+/* =====================================================
+   MAIN APP
+   ===================================================== */
+
+
+.app {
+
+    width: 92%;
+
+    max-width: 1100px;
+
+    margin: 40px auto 80px;
+}
+
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+
+.header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+
+.header h1 {
+
+    font-size: 34px;
+
+    letter-spacing: -1px;
+}
+
+
+.header p {
+
+    color: #8b949e;
+
+    margin-top: 6px;
+}
+
+
+.date {
+
+    color: #8b949e;
+}
+
+
+/* =====================================================
+   CARDS
+   ===================================================== */
+
+
+.card {
+
+    background: #161b22;
+
+    border: 1px solid #30363d;
+
+    border-radius: 12px;
+
+    padding: 24px;
+
+    margin-bottom: 20px;
+}
+
+
+.section-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+
+.section-header h2,
+.graphs-header h2 {
+
+    font-size: 20px;
+}
+
+
+.section-header p,
+.graphs-header p {
+
+    color: #8b949e;
+
+    margin-top: 5px;
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   TODAY
+   ===================================================== */
+
+
+.progress {
+
+    text-align: right;
+}
+
+
+.progress strong {
+
+    display: block;
+
+    font-size: 22px;
+}
+
+
+.progress span {
+
+    color: #8b949e;
+
+    font-size: 13px;
+}
+
+
+.today-habits {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 12px;
+
+    margin-top: 25px;
+}
+
+
+.today-habit {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    background: #0d1117;
+
+    border: 1px solid #30363d;
+
+    border-radius: 9px;
+
+    padding: 15px;
+
+    cursor: pointer;
+
+    transition: 0.15s;
+}
+
+
+.today-habit:hover {
+
+    border-color: #8b949e;
+}
+
+
+.habit-color {
+
+    width: 12px;
+
+    height: 12px;
+
+    border-radius: 50%;
+
+    flex-shrink: 0;
+}
+
+
+.today-checkbox {
+
+    margin-left: auto;
+
+    width: 24px;
+
+    height: 24px;
+
+    border: 1px solid #484f58;
+
+    border-radius: 6px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: white;
+}
+
+
+.today-habit.done
+.today-checkbox {
+
+    background: var(--habit-color);
+
+    border-color: var(--habit-color);
+}
+
+
+.today-habit.done
+.today-checkbox::after {
+
+    content: "✓";
+
+    font-size: 15px;
+
+    font-weight: bold;
+}
+
+
+/* =====================================================
+   HABIT MANAGEMENT
+   ===================================================== */
+
+
+.habit-list {
+
+    margin-top: 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+.habit-item {
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 12px;
+
+    background: #0d1117;
+
+    border: 1px solid #30363d;
+
+    border-radius: 8px;
+}
+
+
+.habit-info {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.habit-actions {
+
+    margin-left: auto;
+
+    display: flex;
+
+    gap: 8px;
+}
+
+
+/* Add button */
+
+.add-btn {
+
+    background: #238636;
+
+    border: 1px solid #2ea043;
+
+    color: white;
+
+    padding: 9px 14px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-weight: 600;
+}
+
+
+.add-btn:hover {
+
+    opacity: 0.9;
+}
+
+
+/* Edit button */
+
+.edit-btn {
+
+    background: transparent;
+
+    border: 1px solid #30363d;
+
+    color: #8b949e;
+
+    cursor: pointer;
+
+    padding: 7px 11px;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+}
+
+
+.edit-btn:hover {
+
+    color: #58a6ff;
+
+    border-color: #58a6ff;
+
+    background: rgba(88, 166, 255, 0.08);
+}
+
+
+/* Remove button */
+
+.remove-btn {
+
+    background: transparent;
+
+    border: 1px solid #30363d;
+
+    color: #8b949e;
+
+    cursor: pointer;
+
+    padding: 7px 11px;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+}
+
+
+.remove-btn:hover {
+
+    color: #ff7b72;
+
+    border-color: #ff7b72;
+
+    background: rgba(255, 123, 114, 0.08);
+}
+
+
+/* =====================================================
+   MODAL
+   ===================================================== */
+
+
+.modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.7);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    z-index: 100;
+}
+
+
+.hidden {
+
+    display: none;
+}
+
+
+.modal-content {
+
+    width: 90%;
+
+    max-width: 400px;
+
+    background: #161b22;
+
+    border: 1px solid #30363d;
+
+    border-radius: 12px;
+
+    padding: 24px;
+}
+
+
+.modal-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+
+.close-btn {
+
+    background: transparent;
+
+    border: 0;
+
+    color: #8b949e;
+
+    font-size: 25px;
+
+    cursor: pointer;
+}
+
+
+.modal-content label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #c9d1d9;
+
+    font-size: 14px;
+}
+
+
+.modal-content input {
+
+    width: 100%;
+
+    padding: 11px;
+
+    margin-bottom: 20px;
+
+    background: #0d1117;
+
+    border: 1px solid #30363d;
+
+    border-radius: 7px;
+
+    color: white;
+
+    outline: none;
+}
+
+
+.modal-content input:focus {
+
+    border-color: #58a6ff;
+}
+
+
+/* =====================================================
+   COLORS
+   ===================================================== */
+
+
+.color-options {
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-bottom: 25px;
+}
+
+
+.color-option {
+
+    width: 30px;
+
+    height: 30px;
+
+    border-radius: 50%;
+
+    border: 3px solid transparent;
+
+    background: var(--habit-color);
+
+    cursor: pointer;
+}
+
+
+.color-option.selected {
+
+    border-color: white;
+
+    transform: scale(1.1);
+}
+
+
+.save-btn {
+
+    width: 100%;
+
+    padding: 11px;
+
+    background: #238636;
+
+    color: white;
+
+    border: 0;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+
+.save-btn:hover {
+
+    opacity: 0.9;
+}
+
+
+/* =====================================================
+   GRAPHS
+   ===================================================== */
+
+
+.graphs-header {
+
+    margin: 35px 0 15px;
+}
+
+
+.month-navigation {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 15px;
+}
+
+
+.month-navigation h2 {
+
+    font-size: 20px;
+}
+
+
+.month-buttons {
+
+    display: flex;
+
+    gap: 8px;
+}
+
+
+.month-btn {
+
+    background: #21262d;
+
+    border: 1px solid #30363d;
+
+    color: #e6edf3;
+
+    border-radius: 6px;
+
+    padding: 7px 11px;
+
+    cursor: pointer;
+}
+
+
+.month-btn:hover {
+
+    background: #30363d;
+}
+
+
+.graph-card {
+
+    background: #161b22;
+
+    border: 1px solid #30363d;
+
+    border-radius: 12px;
+
+    padding: 22px;
+
+    margin-bottom: 15px;
+}
+
+
+.graph-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+}
+
+
+.graph-title strong {
+
+    font-size: 16px;
+}
+
+
+/* Calendar */
+
+.graph-wrapper {
+
+    overflow-x: auto;
+}
+
+
+.calendar {
+
+    display: flex;
+
+    gap: 8px;
+
+    min-width: max-content;
+}
+
+
+/* Weekday names */
+
+.weekday-labels {
+
+    display: grid;
+
+    grid-template-rows:
+        repeat(7, 20px);
+
+    gap: 5px;
+
+    margin-right: 4px;
+}
+
+
+.weekday-labels span {
+
+    font-size: 10px;
+
+    color: #8b949e;
+
+    display: flex;
+
+    align-items: center;
+}
+
+
+/* Weeks */
+
+.weeks {
+
+    display: flex;
+
+    gap: 5px;
+}
+
+
+.week {
+
+    display: grid;
+
+    grid-template-rows:
+        repeat(7, 20px);
+
+    gap: 5px;
+}
+
+
+/* Day boxes */
+
+.day-box {
+
+    width: 20px;
+
+    height: 20px;
+
+    border-radius: 4px;
+
+    background: #0d1117;
+
+    border: 1px solid #30363d;
+
+    cursor: pointer;
+
+    transition: transform 0.1s;
+}
+
+
+.day-box:hover {
+
+    transform: scale(1.15);
+}
+
+
+.day-box.done {
+
+    background: var(--habit-color);
+
+    border-color: var(--habit-color);
+}
+
+
+.day-box.empty {
+
+    background: transparent;
+
+    border-color: transparent;
+
+    cursor: default;
+}
+
+
+.day-box.empty:hover {
+
+    transform: none;
+}
+
+
+/* =====================================================
+   STATISTICS
+   ===================================================== */
+
+
+.stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+
+    margin-top: 20px;
+}
+
+
+.stat-card {
+
+    background: #161b22;
+
+    border: 1px solid #30363d;
+
+    border-radius: 12px;
+
+    padding: 20px;
+}
+
+
+.stat-card span {
+
+    font-size: 20px;
+}
+
+
+.stat-card strong {
+
+    display: block;
+
+    font-size: 26px;
+
+    margin-top: 8px;
+}
+
+
+.stat-card p {
+
+    color: #8b949e;
+
+    margin-top: 5px;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+   ===================================================== */
+
+
+.empty {
+
+    color: #8b949e;
+
+    text-align: center;
+
+    padding: 25px;
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+
+@media (max-width: 700px) {
+
+    .app {
+
+        width: 94%;
+
+        margin-top: 20px;
+    }
+
+
+    .header {
+
+        align-items: flex-start;
+
+        gap: 10px;
+    }
+
+
+    .header h1 {
+
+        font-size: 27px;
+    }
+
+
+    .date {
+
+        font-size: 12px;
+    }
+
+
+    .today-habits {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .stats {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+
+    .section-header {
+
+        align-items: flex-start;
+    }
+
+
+    .add-btn {
+
+        white-space: nowrap;
+    }
+
+
+    .habit-item {
+
+        align-items: flex-start;
+    }
+
+
+    .habit-actions {
+
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
+
+    .edit-btn,
+    .remove-btn {
+
+        padding: 6px 8px;
+
+        font-size: 12px;
+    }
+
+}
