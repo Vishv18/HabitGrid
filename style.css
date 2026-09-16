@@ -924,3 +924,244 @@ input {
     }
 
 }
+
+/* =====================================================
+   YEAR CONTRIBUTION CALENDAR
+   ===================================================== */
+
+.year-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.year-navigation h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.year-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+
+/* =====================================================
+   GRAPH CARD
+   ===================================================== */
+
+.graph-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 28px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   HABIT TITLE
+   ===================================================== */
+
+.graph-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    font-size: 18px;
+}
+
+
+/* =====================================================
+   HORIZONTAL SCROLL
+   ===================================================== */
+
+.year-graph-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+
+/* =====================================================
+   MONTH LABELS
+   ===================================================== */
+
+.year-month-labels {
+    display: grid;
+
+    /*
+       First column = weekday labels
+       Remaining columns = weeks
+    */
+
+    grid-template-columns:
+        45px
+        repeat(53, 20px);
+
+    column-gap: 4px;
+
+    min-width: max-content;
+
+    height: 22px;
+    margin-bottom: 5px;
+}
+
+.year-month-labels span {
+    font-size: 12px;
+    color: #8b949e;
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   CALENDAR
+   ===================================================== */
+
+.year-calendar {
+    display: flex;
+    min-width: max-content;
+}
+
+
+/* =====================================================
+   WEEKDAY LABELS
+   ===================================================== */
+
+.year-weekdays {
+    width: 45px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    flex-shrink: 0;
+}
+
+.year-weekdays span {
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+
+    font-size: 11px;
+    color: #8b949e;
+}
+
+
+/* =====================================================
+   ALL WEEKS
+   ===================================================== */
+
+.year-weeks {
+    display: flex;
+    gap: 4px;
+}
+
+
+/* =====================================================
+   SINGLE WEEK
+   ===================================================== */
+
+.year-week {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    flex-shrink: 0;
+}
+
+
+/* =====================================================
+   DAY BOX
+   ===================================================== */
+
+.year-week .day-box {
+    width: 20px;
+    height: 20px;
+
+    box-sizing: border-box;
+
+    border-radius: 4px;
+
+    background: #21262d;
+
+    border: 1px solid #30363d;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.1s ease,
+        border-color 0.1s ease;
+}
+
+
+/* =====================================================
+   COMPLETED DAY
+   ===================================================== */
+
+.year-week .day-box.done {
+    background: var(--habit-color);
+
+    border-color: var(--habit-color);
+}
+
+
+/* =====================================================
+   EMPTY DAY
+   ===================================================== */
+
+.year-week .day-box.empty {
+    background: transparent;
+
+    border-color: transparent;
+
+    cursor: default;
+}
+
+
+/* =====================================================
+   TODAY
+   ===================================================== */
+
+.year-week .day-box.today {
+    outline: 2px solid #ffffff;
+    outline-offset: 1px;
+}
+
+
+/* =====================================================
+   HOVER
+   ===================================================== */
+
+.year-week .day-box:not(.empty):hover {
+    transform: scale(1.15);
+
+    border-color: #ffffff;
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 700px) {
+
+    .year-navigation {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .graph-card {
+        padding: 18px;
+    }
+
+    .year-navigation h2 {
+        font-size: 24px;
+    }
+
+}

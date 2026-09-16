@@ -506,9 +506,7 @@ function saveHabit() {
     }
 
 
-    // =============================================
     // EDIT EXISTING HABIT
-    // =============================================
 
     if (editingHabitId) {
 
@@ -520,7 +518,7 @@ function saveHabit() {
 
         if (habit) {
 
-            // Keep existing completion history
+            // Keep completion history
 
             habit.name = name;
 
@@ -531,9 +529,7 @@ function saveHabit() {
     }
 
 
-    // =============================================
     // ADD NEW HABIT
-    // =============================================
 
     else {
 
@@ -640,14 +636,69 @@ function removeHabit(id) {
 
 
 // =====================================================
-// GRAPH MONTH
+// YEAR GRAPH STATE
 // =====================================================
 
-let graphDate = new Date();
+// Start with the current year
+
+let graphYear =
+    new Date().getFullYear();
 
 
 // =====================================================
-// HABIT GRAPH
+// GET YEAR START
+// =====================================================
+
+function getYearStart(year) {
+
+    return new Date(
+        year,
+        0,
+        1
+    );
+
+}
+
+
+// =====================================================
+// GET YEAR END
+// =====================================================
+
+function getYearEnd(year) {
+
+    return new Date(
+        year,
+        11,
+        31
+    );
+
+}
+
+
+// =====================================================
+// MONDAY-BASED DAY INDEX
+// =====================================================
+
+function getMondayIndex(date) {
+
+    const day =
+        date.getDay();
+
+    // JavaScript:
+    // Sunday = 0
+    // Monday = 1
+    // ...
+    // Saturday = 6
+
+    return day === 0
+        ? 6
+        : day - 1;
+
+}
+
+
+// =====================================================
+// RENDER YEAR CALENDAR
 // =====================================================
 
 function renderHabitGraphs() {
@@ -660,9 +711,9 @@ function renderHabitGraphs() {
     container.innerHTML = "";
 
 
-    // ---------------------------------------------
+    // =================================================
     // NO HABITS
-    // ---------------------------------------------
+    // =================================================
 
     if (habits.length === 0) {
 
@@ -677,62 +728,41 @@ function renderHabitGraphs() {
     }
 
 
-    // ---------------------------------------------
-    // CURRENT MONTH
-    // ---------------------------------------------
-
-    const year =
-        graphDate.getFullYear();
-
-    const month =
-        graphDate.getMonth();
-
-
-    const monthName =
-        graphDate.toLocaleDateString(
-            "en-IN",
-            {
-                month: "long",
-                year: "numeric"
-            }
-        );
-
-
-    // ---------------------------------------------
-    // MONTH NAVIGATION
-    // ---------------------------------------------
+    // =================================================
+    // YEAR NAVIGATION
+    // =================================================
 
     const navigation =
         document.createElement("div");
 
     navigation.className =
-        "month-navigation";
+        "year-navigation";
 
 
     navigation.innerHTML = `
         <h2>
-            ${monthName}
+            ${graphYear}
         </h2>
 
-        <div class="month-buttons">
+        <div class="year-buttons">
 
             <button
                 class="month-btn"
-                id="previousMonth"
+                id="previousYear"
             >
                 ←
             </button>
 
             <button
                 class="month-btn"
-                id="todayMonth"
+                id="currentYear"
             >
-                Today
+                Current Year
             </button>
 
             <button
                 class="month-btn"
-                id="nextMonth"
+                id="nextYear"
             >
                 →
             </button>
@@ -746,109 +776,119 @@ function renderHabitGraphs() {
     );
 
 
-    // ---------------------------------------------
-    // PREVIOUS MONTH
-    // ---------------------------------------------
+    // =================================================
+    // PREVIOUS YEAR
+    // =================================================
 
     document
-        .getElementById("previousMonth")
+        .getElementById("previousYear")
         .addEventListener(
             "click",
             () => {
 
-                graphDate =
-                    new Date(
-                        year,
-                        month - 1,
-                        1
-                    );
+                graphYear--;
 
                 renderHabitGraphs();
 
             }
         );
-
-
-    // ---------------------------------------------
-    // NEXT MONTH
-    // ---------------------------------------------
-
-    document
-        .getElementById("nextMonth")
-        .addEventListener(
-            "click",
-            () => {
-
-                graphDate =
-                    new Date(
-                        year,
-                        month + 1,
-                        1
-                    );
-
-                renderHabitGraphs();
-
-            }
-        );
-
-
-    // ---------------------------------------------
-    // TODAY
-    // ---------------------------------------------
-
-    document
-        .getElementById("todayMonth")
-        .addEventListener(
-            "click",
-            () => {
-
-                graphDate = new Date();
-
-                renderHabitGraphs();
-
-            }
-        );
-
-
-    // ---------------------------------------------
-    // DAYS IN MONTH
-    // ---------------------------------------------
-
-    const daysInMonth =
-        new Date(
-            year,
-            month + 1,
-            0
-        ).getDate();
-
-
-    // ---------------------------------------------
-    // FIRST DAY OF MONTH
-    // ---------------------------------------------
-
-    const firstDay =
-        new Date(
-            year,
-            month,
-            1
-        );
-
-
-    // Convert Sunday-based JS
-    // to Monday-based layout
-
-    let startingDay =
-        firstDay.getDay();
-
-
-    startingDay =
-        startingDay === 0
-            ? 6
-            : startingDay - 1;
 
 
     // =================================================
-    // CREATE ONE GRAPH FOR EACH HABIT
+    // NEXT YEAR
+    // =================================================
+
+    document
+        .getElementById("nextYear")
+        .addEventListener(
+            "click",
+            () => {
+
+                graphYear++;
+
+                renderHabitGraphs();
+
+            }
+        );
+
+
+    // =================================================
+    // CURRENT YEAR
+    // =================================================
+
+    document
+        .getElementById("currentYear")
+        .addEventListener(
+            "click",
+            () => {
+
+                graphYear =
+                    new Date().getFullYear();
+
+                renderHabitGraphs();
+
+            }
+        );
+
+
+    // =================================================
+    // YEAR INFORMATION
+    // =================================================
+
+    const yearStart =
+        getYearStart(graphYear);
+
+    const yearEnd =
+        getYearEnd(graphYear);
+
+
+    const startingDay =
+        getMondayIndex(yearStart);
+
+    const endingDay =
+        getMondayIndex(yearEnd);
+
+
+    // Number of days in year
+
+    const daysInYear =
+        (
+            new Date(
+                graphYear,
+                11,
+                31
+            ) -
+            new Date(
+                graphYear,
+                0,
+                1
+            )
+        ) /
+        (
+            1000 *
+            60 *
+            60 *
+            24
+        ) + 1;
+
+
+    // =================================================
+    // NUMBER OF WEEKS
+    // =================================================
+
+    const totalCells =
+        startingDay +
+        daysInYear;
+
+
+    const numberOfWeeks =
+        Math.ceil(
+            totalCells / 7
+        );
+
+
+    // =================================================
+    // CREATE GRAPH FOR EACH HABIT
     // =================================================
 
     habits.forEach(habit => {
@@ -860,93 +900,208 @@ function renderHabitGraphs() {
             "graph-card";
 
 
-        // IMPORTANT:
-        // The ID has NO spaces or line breaks.
+        // =================================================
+        // HABIT TITLE
+        // =================================================
 
-        card.innerHTML = `
-            <div class="graph-title">
+        const title =
+            document.createElement("div");
 
-                <div
-                    class="habit-color"
-                    style="background:${habit.color}"
-                ></div>
+        title.className =
+            "graph-title";
 
-                <strong>
-                    ${escapeHTML(habit.name)}
-                </strong>
+        title.innerHTML = `
+            <div
+                class="habit-color"
+                style="background:${habit.color}"
+            ></div>
 
-            </div>
-
-
-            <div class="graph-wrapper">
-
-                <div class="calendar">
-
-                    <div class="weekday-labels">
-
-                        <span>Mon</span>
-                        <span>Tue</span>
-                        <span>Wed</span>
-                        <span>Thu</span>
-                        <span>Fri</span>
-                        <span>Sat</span>
-                        <span>Sun</span>
-
-                    </div>
-
-
-                    <div
-                        class="weeks"
-                        id="weeks-${habit.id}"
-                    ></div>
-
-                </div>
-
-            </div>
+            <strong>
+                ${escapeHTML(habit.name)}
+            </strong>
         `;
 
 
-        container.appendChild(card);
+        card.appendChild(title);
 
 
-        // ---------------------------------------------
-        // FIND THE WEEKS CONTAINER
-        // ---------------------------------------------
+        // =================================================
+        // GRAPH WRAPPER
+        // =================================================
 
-        const weeks =
-            document.getElementById(
-                `weeks-${habit.id}`
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            "year-graph-wrapper";
+
+
+        // =================================================
+        // MONTH LABELS
+        // =================================================
+
+        const monthLabels =
+            document.createElement("div");
+
+        monthLabels.className =
+            "year-month-labels";
+
+
+        // Empty space for weekday labels
+
+        const emptyLabel =
+            document.createElement("div");
+
+        emptyLabel.className =
+            "weekday-spacer";
+
+        monthLabels.appendChild(
+            emptyLabel
+        );
+
+
+        // Create month positions
+
+        for (
+            let month = 0;
+            month < 12;
+            month++
+        ) {
+
+            const firstOfMonth =
+                new Date(
+                    graphYear,
+                    month,
+                    1
+                );
+
+
+            const dayOfYear =
+                Math.floor(
+                    (
+                        firstOfMonth -
+                        yearStart
+                    ) /
+                    (
+                        1000 *
+                        60 *
+                        60 *
+                        24
+                    )
+                );
+
+
+            const weekIndex =
+                Math.floor(
+                    (
+                        startingDay +
+                        dayOfYear
+                    ) / 7
+                );
+
+
+            const label =
+                document.createElement(
+                    "span"
+                );
+
+            label.textContent =
+                firstOfMonth.toLocaleDateString(
+                    "en-IN",
+                    {
+                        month: "short"
+                    }
+                );
+
+
+            label.style.gridColumn =
+                `${weekIndex + 2}`;
+
+
+            monthLabels.appendChild(
+                label
             );
-
-
-        if (!weeks) {
-
-            console.error(
-                "Could not find graph container for:",
-                habit.name
-            );
-
-            return;
 
         }
 
 
-        // ---------------------------------------------
-        // NUMBER OF WEEKS
-        // ---------------------------------------------
-
-        const totalCells =
-            startingDay + daysInMonth;
-
-
-        const numberOfWeeks =
-            Math.ceil(
-                totalCells / 7
-            );
+        wrapper.appendChild(
+            monthLabels
+        );
 
 
         // =================================================
-        // CREATE WEEKS
+        // CALENDAR BODY
+        // =================================================
+
+        const calendar =
+            document.createElement("div");
+
+        calendar.className =
+            "year-calendar";
+
+
+        // =================================================
+        // WEEKDAY LABELS
+        // =================================================
+
+        const weekdays =
+            document.createElement("div");
+
+        weekdays.className =
+            "year-weekdays";
+
+
+        const weekdayNames = [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+        ];
+
+
+        weekdayNames.forEach(
+            name => {
+
+                const label =
+                    document.createElement(
+                        "span"
+                    );
+
+                label.textContent =
+                    name;
+
+                weekdays.appendChild(
+                    label
+                );
+
+            }
+        );
+
+
+        calendar.appendChild(
+            weekdays
+        );
+
+
+        // =================================================
+        // WEEK CONTAINER
+        // =================================================
+
+        const weeks =
+            document.createElement(
+                "div"
+            );
+
+        weeks.className =
+            "year-weeks";
+
+
+        // =================================================
+        // CREATE EVERY WEEK
         // =================================================
 
         for (
@@ -960,9 +1115,8 @@ function renderHabitGraphs() {
                     "div"
                 );
 
-
             weekColumn.className =
-                "week";
+                "year-week";
 
 
             // =================================================
@@ -976,20 +1130,19 @@ function renderHabitGraphs() {
             ) {
 
                 const cellIndex =
-                    week * 7 + weekday;
+                    week * 7 +
+                    weekday;
 
 
-                const day =
+                const dayOffset =
                     cellIndex -
-                    startingDay +
-                    1;
+                    startingDay;
 
 
                 const box =
                     document.createElement(
                         "div"
                     );
-
 
                 box.className =
                     "day-box";
@@ -1001,13 +1154,13 @@ function renderHabitGraphs() {
                 );
 
 
-                // ---------------------------------------------
-                // EMPTY CELLS
-                // ---------------------------------------------
+                // =================================================
+                // CHECK IF VALID DATE
+                // =================================================
 
                 if (
-                    day < 1 ||
-                    day > daysInMonth
+                    dayOffset < 0 ||
+                    dayOffset >= daysInYear
                 ) {
 
                     box.classList.add(
@@ -1023,27 +1176,33 @@ function renderHabitGraphs() {
                 }
 
 
-                // ---------------------------------------------
-                // DATE KEY
-                // ---------------------------------------------
+                // =================================================
+                // CREATE DATE
+                // =================================================
+
+                const currentDate =
+                    new Date(
+                        graphYear,
+                        0,
+                        1
+                    );
+
+
+                currentDate.setDate(
+                    currentDate.getDate() +
+                    dayOffset
+                );
+
 
                 const dateKey =
-                    `${year}-${String(
-                        month + 1
-                    ).padStart(
-                        2,
-                        "0"
-                    )}-${String(
-                        day
-                    ).padStart(
-                        2,
-                        "0"
-                    )}`;
+                    formatDateKey(
+                        currentDate
+                    );
 
 
-                // ---------------------------------------------
-                // COMPLETED?
-                // ---------------------------------------------
+                // =================================================
+                // COMPLETED
+                // =================================================
 
                 if (
                     habit.completed[dateKey]
@@ -1057,17 +1216,52 @@ function renderHabitGraphs() {
                 }
 
 
-                // ---------------------------------------------
+                // =================================================
+                // TODAY INDICATOR
+                // =================================================
+
+                const today =
+                    new Date();
+
+
+                if (
+                    currentDate.getFullYear() ===
+                    today.getFullYear() &&
+                    currentDate.getMonth() ===
+                    today.getMonth() &&
+                    currentDate.getDate() ===
+                    today.getDate()
+                ) {
+
+                    box.classList.add(
+                        "today"
+                    );
+
+                }
+
+
+                // =================================================
                 // TOOLTIP
-                // ---------------------------------------------
+                // =================================================
+
+                const readableDate =
+                    currentDate.toLocaleDateString(
+                        "en-IN",
+                        {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric"
+                        }
+                    );
+
 
                 box.title =
-                    `${habit.name} — ${dateKey}`;
+                    `${habit.name} — ${readableDate}`;
 
 
-                // ---------------------------------------------
-                // CLICK BOX
-                // ---------------------------------------------
+                // =================================================
+                // CLICK DATE
+                // =================================================
 
                 box.addEventListener(
                     "click",
@@ -1096,6 +1290,26 @@ function renderHabitGraphs() {
             );
 
         }
+
+
+        calendar.appendChild(
+            weeks
+        );
+
+
+        wrapper.appendChild(
+            calendar
+        );
+
+
+        card.appendChild(
+            wrapper
+        );
+
+
+        container.appendChild(
+            card
+        );
 
     });
 
@@ -1228,7 +1442,6 @@ function updateStatistics() {
 
 
     // Temporary longest streak
-    // Will be improved later.
 
     document.getElementById(
         "longestStreak"
