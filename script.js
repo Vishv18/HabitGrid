@@ -145,7 +145,7 @@ function renderTodayHabits() {
 
         container.innerHTML = `
             <div class="empty">
-                No habits yet. Add your first habit!
+                No habits yet. Click "+ Add Habit" above to start tracking!
             </div>
         `;
 
@@ -174,7 +174,7 @@ function renderTodayHabits() {
 
         item.innerHTML = `
             <div
-                class="habit-color"
+                class="habit-color-dot"
                 style="background:${habit.color}"
             ></div>
 
@@ -243,6 +243,12 @@ function updateProgress() {
     ).textContent =
         `${completed} / ${habits.length}`;
 
+    const fillBar = document.getElementById("progressBarFill");
+    if (fillBar) {
+        const pct = habits.length ? Math.round((completed / habits.length) * 100) : 0;
+        fillBar.style.width = `${pct}%`;
+    }
+
 }
 
 
@@ -279,7 +285,7 @@ function renderHabitList() {
             <div class="habit-info">
 
                 <div
-                    class="habit-color"
+                    class="habit-color-dot"
                     style="background:${habit.color}"
                 ></div>
 
@@ -294,13 +300,13 @@ function renderHabitList() {
                 <button
                     class="edit-btn"
                 >
-                    ✏ Edit
+                    Edit
                 </button>
 
                 <button
                     class="remove-btn"
                 >
-                    🗑 Remove
+                    Remove
                 </button>
 
             </div>

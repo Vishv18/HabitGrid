@@ -4,304 +4,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HabitGrid — Personal Habit Tracker</title>
 
-    <title>HabitGrid</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 </head>
 
-
 <body>
+
+    <!-- Ambient background mesh -->
+    <div class="bg-glow"></div>
 
     <div class="app">
 
         <!-- ================= HEADER ================= -->
-
         <header class="header">
-
-            <div>
-                <h1>HabitGrid</h1>
-                <p>Vishv's personal habit tracker</p>
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+                        <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+                        <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                        <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+                    </svg>
+                </div>
+                <div>
+                    <h1>HabitGrid</h1>
+                    <p>Vishv's Personal Habit Tracker</p>
+                </div>
             </div>
 
-            <div
-                class="date"
-                id="currentDate">
+            <div class="header-right">
+                <div class="date-badge">
+                    <span class="live-dot"></span>
+                    <span id="currentDate"></span>
+                </div>
             </div>
-
         </header>
 
 
-        <!-- ================= TODAY ================= -->
-
-        <section class="card">
-
+        <!-- ================= TODAY'S FOCUS ================= -->
+        <section class="card focus-card">
             <div class="section-header">
-
                 <div>
-                    <h2>Today's Habits</h2>
-
-                    <p id="todayDate"></p>
+                    <div class="section-badge">Today's Focus</div>
+                    <h2 id="todayDate">Today</h2>
                 </div>
 
-
-                <div class="progress">
-
-                    <strong id="progressText">
-                        0 / 0
-                    </strong>
-
-                    <span>
-                        completed
-                    </span>
-
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span class="progress-label">Completion</span>
+                        <strong id="progressText">0 / 0</strong>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="progressBarFill" class="progress-bar-fill" style="width: 0%;"></div>
+                    </div>
                 </div>
-
             </div>
 
-
-            <div
-                id="todayHabits"
-                class="today-habits">
-            </div>
-
+            <div id="todayHabits" class="today-habits"></div>
         </section>
-
 
 
         <!-- ================= MANAGE HABITS ================= -->
-
         <section class="card">
-
             <div class="section-header">
-
                 <div>
-
                     <h2>My Habits</h2>
-
-                    <p>
-                        Manage your habits
-                    </p>
-
+                    <p>Configure and manage your habit routines</p>
                 </div>
 
-
-                <button
-                    id="addHabitBtn"
-                    class="add-btn">
-
-                    + Add Habit
-
+                <button id="addHabitBtn" class="add-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Add Habit</span>
                 </button>
-
             </div>
 
-
-            <div
-                id="habitList"
-                class="habit-list">
-            </div>
-
+            <div id="habitList" class="habit-list"></div>
         </section>
-
 
 
         <!-- ================= HABIT GRAPHS ================= -->
-
-        <section>
-
+        <section class="graphs-section">
             <div class="graphs-header">
-
-                <h2>Habit Activity</h2>
-
-                <p>
-                    Your daily completion history
-                </p>
-
+                <div>
+                    <h2>Habit Activity</h2>
+                    <p>Yearly completion history matrix</p>
+                </div>
             </div>
 
-
             <div id="habitGraphs"></div>
-
         </section>
-
 
 
         <!-- ================= STATISTICS ================= -->
-
         <section class="stats">
-
             <div class="stat-card">
-
-                <span>🔥</span>
-
-                <strong id="currentStreak">
-                    0
-                </strong>
-
-                <p>
-                    Current streak
-                </p>
-
+                <div class="stat-icon-wrapper streak-fire">🔥</div>
+                <div class="stat-content">
+                    <strong id="currentStreak">0</strong>
+                    <p>Current streak</p>
+                </div>
             </div>
 
-
             <div class="stat-card">
-
-                <span>🏆</span>
-
-                <strong id="longestStreak">
-                    0
-                </strong>
-
-                <p>
-                    Longest streak
-                </p>
-
+                <div class="stat-icon-wrapper streak-trophy">🏆</div>
+                <div class="stat-content">
+                    <strong id="longestStreak">0</strong>
+                    <p>Longest streak</p>
+                </div>
             </div>
 
-
             <div class="stat-card">
-
-                <span>✅</span>
-
-                <strong id="completionRate">
-                    0%
-                </strong>
-
-                <p>
-                    Completion rate
-                </p>
-
+                <div class="stat-icon-wrapper rate-check">✅</div>
+                <div class="stat-content">
+                    <strong id="completionRate">0%</strong>
+                    <p>Completion rate</p>
+                </div>
             </div>
 
-
             <div class="stat-card">
-
-                <span>📅</span>
-
-                <strong id="daysCompleted">
-                    0
-                </strong>
-
-                <p>
-                    Days completed
-                </p>
-
+                <div class="stat-icon-wrapper days-calendar">📅</div>
+                <div class="stat-content">
+                    <strong id="daysCompleted">0</strong>
+                    <p>Days completed</p>
+                </div>
             </div>
-
         </section>
 
     </div>
 
 
-
     <!-- ================= HABIT MODAL ================= -->
-
-    <div
-        id="habitModal"
-        class="modal hidden">
-
+    <div id="habitModal" class="modal hidden">
         <div class="modal-content">
-
             <div class="modal-header">
-
-                <h2 id="modalTitle">
-                    Add New Habit
-                </h2>
-
-
-                <button
-                    id="closeModal"
-                    class="close-btn">
-
-                    ×
-
-                </button>
-
+                <h2 id="modalTitle">Add New Habit</h2>
+                <button id="closeModal" class="close-btn" aria-label="Close modal">×</button>
             </div>
 
-
-            <label for="habitName">
-                Habit name
-            </label>
-
-
-            <input
-                type="text"
-                id="habitName"
-                placeholder="e.g. Cycling"
-                maxlength="30"
-            >
-
-
-            <label>
-                Choose color
-            </label>
-
-
-            <div
-                id="colorOptions"
-                class="color-options">
-
-
-                <button
-                    class="color-option selected"
-                    data-color="#39d353"
-                    style="--habit-color:#39d353">
-                </button>
-
-
-                <button
-                    class="color-option"
-                    data-color="#58a6ff"
-                    style="--habit-color:#58a6ff">
-                </button>
-
-
-                <button
-                    class="color-option"
-                    data-color="#f2cc60"
-                    style="--habit-color:#f2cc60">
-                </button>
-
-
-                <button
-                    class="color-option"
-                    data-color="#bc8cff"
-                    style="--habit-color:#bc8cff">
-                </button>
-
-
-                <button
-                    class="color-option"
-                    data-color="#ff7b72"
-                    style="--habit-color:#ff7b72">
-                </button>
-
-
-                <button
-                    class="color-option"
-                    data-color="#ffa657"
-                    style="--habit-color:#ffa657">
-                </button>
-
+            <div class="form-group">
+                <label for="habitName">Habit name</label>
+                <input type="text" id="habitName" placeholder="e.g. Cycling, Reading..." maxlength="30">
             </div>
 
+            <div class="form-group">
+                <label>Choose accent color</label>
+                <div id="colorOptions" class="color-options">
+                    <button class="color-option selected" data-color="#39d353" style="--habit-color:#39d353"></button>
+                    <button class="color-option" data-color="#58a6ff" style="--habit-color:#58a6ff"></button>
+                    <button class="color-option" data-color="#f2cc60" style="--habit-color:#f2cc60"></button>
+                    <button class="color-option" data-color="#bc8cff" style="--habit-color:#bc8cff"></button>
+                    <button class="color-option" data-color="#ff7b72" style="--habit-color:#ff7b72"></button>
+                    <button class="color-option" data-color="#ffa657" style="--habit-color:#ffa657"></button>
+                </div>
+            </div>
 
-            <button
-                id="saveHabitBtn"
-                class="save-btn">
-
-                Add Habit
-
-            </button>
-
+            <button id="saveHabitBtn" class="save-btn">Add Habit</button>
         </div>
-
     </div>
-
-
 
     <script src="script.js"></script>
 

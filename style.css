@@ -1,7 +1,30 @@
 /* =====================================================
-   HABITGRID
+   HABITGRID — Modern Minimal & Attractive Theme
    ===================================================== */
 
+:root {
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    
+    --bg-dark: #07090e;
+    --card-bg: rgba(13, 18, 30, 0.65);
+    --card-bg-solid: #0d121f;
+    --card-border: rgba(255, 255, 255, 0.08);
+    --card-border-hover: rgba(255, 255, 255, 0.16);
+    
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    
+    --accent-green: #10b981;
+    --accent-blue: #38bdf8;
+    --accent-purple: #a855f7;
+    
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
 * {
     margin: 0;
@@ -9,1214 +32,832 @@
     box-sizing: border-box;
 }
 
-
 body {
-
-    font-family: Arial, sans-serif;
-
-    background: #0d1117;
-
-    color: #e6edf3;
-
+    font-family: var(--font-sans);
+    background-color: var(--bg-dark);
+    color: var(--text-main);
     min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
 }
 
+/* Ambient glow mesh */
+.bg-glow {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 400px;
+    background: radial-gradient(ellipse at top, rgba(99, 102, 241, 0.12) 0%, rgba(16, 185, 129, 0.06) 45%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
 
-button,
-input {
+button, input {
     font-family: inherit;
 }
 
-
 /* =====================================================
-   MAIN APP
+   MAIN CONTAINER
    ===================================================== */
 
-
 .app {
-
+    position: relative;
+    z-index: 1;
     width: 92%;
-
-    max-width: 1100px;
-
-    margin: 40px auto 80px;
+    max-width: 1120px;
+    margin: 48px auto 96px;
 }
-
 
 /* =====================================================
    HEADER
    ===================================================== */
 
-
 .header {
-
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
-
-    margin-bottom: 30px;
+    margin-bottom: 36px;
 }
 
-
-.header h1 {
-
-    font-size: 34px;
-
-    letter-spacing: -1px;
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
 
-
-.header p {
-
-    color: #8b949e;
-
-    margin-top: 6px;
+.brand-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(16, 185, 129, 0.2));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #818cf8;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
-
-.date {
-
-    color: #8b949e;
+.brand h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
+.brand p {
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+.date-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    backdrop-filter: blur(8px);
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-green);
+    box-shadow: 0 0 8px var(--accent-green);
+}
 
 /* =====================================================
    CARDS
    ===================================================== */
 
-
 .card {
-
-    background: #161b22;
-
-    border: 1px solid #30363d;
-
-    border-radius: 12px;
-
-    padding: 24px;
-
-    margin-bottom: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(12px);
+    transition: var(--transition);
 }
 
+.card:hover {
+    border-color: var(--card-border-hover);
+}
 
 .section-header {
-
     display: flex;
-
     justify-content: space-between;
-
-    align-items: center;
-
+    align-items: flex-start;
     gap: 20px;
 }
 
+.section-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-blue);
+    margin-bottom: 4px;
+}
 
 .section-header h2,
 .graphs-header h2 {
-
     font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-main);
 }
-
 
 .section-header p,
 .graphs-header p {
-
-    color: #8b949e;
-
-    margin-top: 5px;
-
+    color: var(--text-muted);
+    margin-top: 4px;
     font-size: 14px;
 }
 
-
 /* =====================================================
-   TODAY
+   TODAY'S FOCUS & PROGRESS
    ===================================================== */
 
-
-.progress {
-
-    text-align: right;
+.focus-card {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(13, 18, 30, 0.7) 100%);
 }
 
-
-.progress strong {
-
-    display: block;
-
-    font-size: 22px;
+.progress-container {
+    width: 220px;
 }
 
-
-.progress span {
-
-    color: #8b949e;
-
-    font-size: 13px;
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
 }
 
+.progress-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+}
+
+.progress-info strong {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+    border-radius: 9999px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
 
 .today-habits {
-
     display: grid;
-
     grid-template-columns: repeat(2, 1fr);
-
-    gap: 12px;
-
-    margin-top: 25px;
+    gap: 14px;
+    margin-top: 28px;
 }
-
 
 .today-habit {
-
     display: flex;
-
     align-items: center;
-
-    gap: 12px;
-
-    background: #0d1117;
-
-    border: 1px solid #30363d;
-
-    border-radius: 9px;
-
-    padding: 15px;
-
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
     cursor: pointer;
-
-    transition: 0.15s;
+    transition: var(--transition);
 }
-
 
 .today-habit:hover {
-
-    border-color: #8b949e;
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.16);
+    transform: translateY(-2px);
 }
 
-
-.habit-color {
-
-    width: 12px;
-
-    height: 12px;
-
+.habit-color-dot {
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-
     flex-shrink: 0;
 }
 
+.today-habit span {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text-main);
+}
 
 .today-checkbox {
-
     margin-left: auto;
-
-    width: 24px;
-
-    height: 24px;
-
-    border: 1px solid #484f58;
-
+    width: 22px;
+    height: 22px;
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
     border-radius: 6px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
+    transition: var(--transition);
     color: white;
 }
 
-
-.today-habit.done
-.today-checkbox {
-
+.today-habit.done .today-checkbox {
     background: var(--habit-color);
-
     border-color: var(--habit-color);
+    box-shadow: 0 0 12px var(--habit-color);
 }
 
-
-.today-habit.done
-.today-checkbox::after {
-
+.today-habit.done .today-checkbox::after {
     content: "✓";
-
-    font-size: 15px;
-
-    font-weight: bold;
+    font-size: 13px;
+    font-weight: 800;
 }
-
 
 /* =====================================================
    HABIT MANAGEMENT
    ===================================================== */
 
-
 .habit-list {
-
-    margin-top: 20px;
-
+    margin-top: 24px;
     display: flex;
-
     flex-direction: column;
-
-    gap: 8px;
+    gap: 10px;
 }
-
 
 .habit-item {
-
     display: flex;
-
     align-items: center;
-
-    padding: 12px;
-
-    background: #0d1117;
-
-    border: 1px solid #30363d;
-
-    border-radius: 8px;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    transition: var(--transition);
 }
 
+.habit-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.12);
+}
 
 .habit-info {
-
     display: flex;
-
     align-items: center;
-
-    gap: 10px;
+    gap: 12px;
 }
 
+.habit-info span {
+    font-weight: 600;
+    font-size: 15px;
+}
 
 .habit-actions {
-
-    margin-left: auto;
-
     display: flex;
-
     gap: 8px;
 }
-
 
 /* Add button */
-
 .add-btn {
-
-    background: #238636;
-
-    border: 1px solid #2ea043;
-
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
     color: white;
-
-    padding: 9px 14px;
-
-    border-radius: 7px;
-
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-
     font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+    transition: var(--transition);
 }
-
 
 .add-btn:hover {
-
-    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
 }
 
-
-/* Edit button */
-
-.edit-btn {
-
-    background: transparent;
-
-    border: 1px solid #30363d;
-
-    color: #8b949e;
-
+.edit-btn, .remove-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    color: var(--text-muted);
     cursor: pointer;
-
-    padding: 7px 11px;
-
+    padding: 7px 12px;
     border-radius: 6px;
-
     font-size: 13px;
+    font-weight: 500;
+    transition: var(--transition);
 }
-
 
 .edit-btn:hover {
-
-    color: #58a6ff;
-
-    border-color: #58a6ff;
-
-    background: rgba(88, 166, 255, 0.08);
+    color: var(--accent-blue);
+    border-color: rgba(56, 189, 248, 0.3);
+    background: rgba(56, 189, 248, 0.1);
 }
-
-
-/* Remove button */
-
-.remove-btn {
-
-    background: transparent;
-
-    border: 1px solid #30363d;
-
-    color: #8b949e;
-
-    cursor: pointer;
-
-    padding: 7px 11px;
-
-    border-radius: 6px;
-
-    font-size: 13px;
-}
-
 
 .remove-btn:hover {
-
-    color: #ff7b72;
-
-    border-color: #ff7b72;
-
-    background: rgba(255, 123, 114, 0.08);
+    color: #f43f5e;
+    border-color: rgba(244, 63, 94, 0.3);
+    background: rgba(244, 63, 94, 0.1);
 }
-
 
 /* =====================================================
-   MODAL
+   HABIT GRAPHS / ACTIVITY MATRIX
    ===================================================== */
 
-
-.modal {
-
-    position: fixed;
-
-    inset: 0;
-
-    background: rgba(0, 0, 0, 0.7);
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    z-index: 100;
+.graphs-section {
+    margin-top: 36px;
 }
-
-
-.hidden {
-
-    display: none;
-}
-
-
-.modal-content {
-
-    width: 90%;
-
-    max-width: 400px;
-
-    background: #161b22;
-
-    border: 1px solid #30363d;
-
-    border-radius: 12px;
-
-    padding: 24px;
-}
-
-
-.modal-header {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 25px;
-}
-
-
-.close-btn {
-
-    background: transparent;
-
-    border: 0;
-
-    color: #8b949e;
-
-    font-size: 25px;
-
-    cursor: pointer;
-}
-
-
-.modal-content label {
-
-    display: block;
-
-    margin-bottom: 8px;
-
-    color: #c9d1d9;
-
-    font-size: 14px;
-}
-
-
-.modal-content input {
-
-    width: 100%;
-
-    padding: 11px;
-
-    margin-bottom: 20px;
-
-    background: #0d1117;
-
-    border: 1px solid #30363d;
-
-    border-radius: 7px;
-
-    color: white;
-
-    outline: none;
-}
-
-
-.modal-content input:focus {
-
-    border-color: #58a6ff;
-}
-
-
-/* =====================================================
-   COLORS
-   ===================================================== */
-
-
-.color-options {
-
-    display: flex;
-
-    gap: 12px;
-
-    margin-bottom: 25px;
-}
-
-
-.color-option {
-
-    width: 30px;
-
-    height: 30px;
-
-    border-radius: 50%;
-
-    border: 3px solid transparent;
-
-    background: var(--habit-color);
-
-    cursor: pointer;
-}
-
-
-.color-option.selected {
-
-    border-color: white;
-
-    transform: scale(1.1);
-}
-
-
-.save-btn {
-
-    width: 100%;
-
-    padding: 11px;
-
-    background: #238636;
-
-    color: white;
-
-    border: 0;
-
-    border-radius: 7px;
-
-    cursor: pointer;
-
-    font-weight: bold;
-}
-
-
-.save-btn:hover {
-
-    opacity: 0.9;
-}
-
-
-/* =====================================================
-   GRAPHS
-   ===================================================== */
-
 
 .graphs-header {
-
-    margin: 35px 0 15px;
-}
-
-
-.month-navigation {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 15px;
-}
-
-
-.month-navigation h2 {
-
-    font-size: 20px;
-}
-
-
-.month-buttons {
-
-    display: flex;
-
-    gap: 8px;
-}
-
-
-.month-btn {
-
-    background: #21262d;
-
-    border: 1px solid #30363d;
-
-    color: #e6edf3;
-
-    border-radius: 6px;
-
-    padding: 7px 11px;
-
-    cursor: pointer;
-}
-
-
-.month-btn:hover {
-
-    background: #30363d;
-}
-
-
-.graph-card {
-
-    background: #161b22;
-
-    border: 1px solid #30363d;
-
-    border-radius: 12px;
-
-    padding: 22px;
-
-    margin-bottom: 15px;
-}
-
-
-.graph-title {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
     margin-bottom: 20px;
 }
-
-
-.graph-title strong {
-
-    font-size: 16px;
-}
-
-
-/* Calendar */
-
-.graph-wrapper {
-
-    overflow-x: auto;
-}
-
-
-.calendar {
-
-    display: flex;
-
-    gap: 8px;
-
-    min-width: max-content;
-}
-
-
-/* Weekday names */
-
-.weekday-labels {
-
-    display: grid;
-
-    grid-template-rows:
-        repeat(7, 20px);
-
-    gap: 5px;
-
-    margin-right: 4px;
-}
-
-
-.weekday-labels span {
-
-    font-size: 10px;
-
-    color: #8b949e;
-
-    display: flex;
-
-    align-items: center;
-}
-
-
-/* Weeks */
-
-.weeks {
-
-    display: flex;
-
-    gap: 5px;
-}
-
-
-.week {
-
-    display: grid;
-
-    grid-template-rows:
-        repeat(7, 20px);
-
-    gap: 5px;
-}
-
-
-/* Day boxes */
-
-.day-box {
-
-    width: 20px;
-
-    height: 20px;
-
-    border-radius: 4px;
-
-    background: #0d1117;
-
-    border: 1px solid #30363d;
-
-    cursor: pointer;
-
-    transition: transform 0.1s;
-}
-
-
-.day-box:hover {
-
-    transform: scale(1.15);
-}
-
-
-.day-box.done {
-
-    background: var(--habit-color);
-
-    border-color: var(--habit-color);
-}
-
-
-.day-box.empty {
-
-    background: transparent;
-
-    border-color: transparent;
-
-    cursor: default;
-}
-
-
-.day-box.empty:hover {
-
-    transform: none;
-}
-
-
-/* =====================================================
-   STATISTICS
-   ===================================================== */
-
-
-.stats {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, 1fr);
-
-    gap: 15px;
-
-    margin-top: 20px;
-}
-
-
-.stat-card {
-
-    background: #161b22;
-
-    border: 1px solid #30363d;
-
-    border-radius: 12px;
-
-    padding: 20px;
-}
-
-
-.stat-card span {
-
-    font-size: 20px;
-}
-
-
-.stat-card strong {
-
-    display: block;
-
-    font-size: 26px;
-
-    margin-top: 8px;
-}
-
-
-.stat-card p {
-
-    color: #8b949e;
-
-    margin-top: 5px;
-}
-
-
-/* =====================================================
-   EMPTY STATE
-   ===================================================== */
-
-
-.empty {
-
-    color: #8b949e;
-
-    text-align: center;
-
-    padding: 25px;
-}
-
-
-/* =====================================================
-   MOBILE
-   ===================================================== */
-
-
-@media (max-width: 700px) {
-
-    .app {
-
-        width: 94%;
-
-        margin-top: 20px;
-    }
-
-
-    .header {
-
-        align-items: flex-start;
-
-        gap: 10px;
-    }
-
-
-    .header h1 {
-
-        font-size: 27px;
-    }
-
-
-    .date {
-
-        font-size: 12px;
-    }
-
-
-    .today-habits {
-
-        grid-template-columns: 1fr;
-    }
-
-
-    .stats {
-
-        grid-template-columns:
-            repeat(2, 1fr);
-    }
-
-
-    .section-header {
-
-        align-items: flex-start;
-    }
-
-
-    .add-btn {
-
-        white-space: nowrap;
-    }
-
-
-    .habit-item {
-
-        align-items: flex-start;
-    }
-
-
-    .habit-actions {
-
-        flex-direction: column;
-
-        gap: 5px;
-    }
-
-
-    .edit-btn,
-    .remove-btn {
-
-        padding: 6px 8px;
-
-        font-size: 12px;
-    }
-
-}
-
-/* =====================================================
-   YEAR CONTRIBUTION CALENDAR
-   ===================================================== */
 
 .year-navigation {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 14px;
 }
 
 .year-navigation h2 {
-    margin: 0;
-    font-size: 24px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
 .year-nav-left {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 16px;
     flex-wrap: wrap;
 }
 
+/* View toggle */
 .view-toggle {
     display: flex;
-    background: #0d1117;
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    padding: 2px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 3px;
 }
 
 .view-toggle .month-btn {
     border: none;
     background: transparent;
     font-size: 13px;
-    padding: 5px 12px;
-    border-radius: 4px;
-    color: #8b949e;
+    padding: 5px 14px;
+    border-radius: 5px;
+    color: var(--text-dim);
     cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
 }
 
 .view-toggle .month-btn:hover {
-    color: #e6edf3;
-    background: transparent;
+    color: var(--text-main);
 }
 
 .view-toggle .month-btn.active {
-    background: #21262d;
-    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-main);
     font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.year-buttons {
+.year-buttons, .month-buttons {
     display: flex;
     gap: 8px;
 }
 
-
-/* =====================================================
-   GRAPH CARD
-   ===================================================== */
-
-.graph-card {
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 8px;
-    padding: 28px;
-    margin-bottom: 20px;
-    overflow: hidden;
+.month-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+    padding: 7px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: var(--transition);
 }
 
+.month-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-main);
+    border-color: rgba(255, 255, 255, 0.16);
+}
 
-/* =====================================================
-   HABIT TITLE
-   ===================================================== */
+.graph-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.graph-card:hover {
+    border-color: var(--card-border-hover);
+}
 
 .graph-title {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 22px;
-    font-size: 18px;
+    margin-bottom: 20px;
 }
 
+.graph-title strong {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
 
-/* =====================================================
-   HORIZONTAL SCROLL
-   ===================================================== */
-
-.year-graph-wrapper {
+.year-graph-wrapper, .graph-wrapper {
     width: 100%;
     overflow-x: auto;
-    padding-bottom: 10px;
+    padding-bottom: 6px;
 }
 
+/* Custom scrollbar for graph wrapper */
+.year-graph-wrapper::-webkit-scrollbar,
+.graph-wrapper::-webkit-scrollbar {
+    height: 6px;
+}
 
-/* =====================================================
-   MONTH LABELS
-   ===================================================== */
+.year-graph-wrapper::-webkit-scrollbar-track,
+.graph-wrapper::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 9999px;
+}
+
+.year-graph-wrapper::-webkit-scrollbar-thumb,
+.graph-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 9999px;
+}
 
 .year-month-labels {
     display: grid;
-
-    /*
-       First column = weekday labels
-       Remaining columns = weeks
-    */
-
-    grid-template-columns:
-        45px
-        repeat(53, 20px);
-
+    grid-template-columns: 45px repeat(53, 20px);
     column-gap: 4px;
-
     min-width: max-content;
-
-    height: 22px;
-    margin-bottom: 5px;
+    height: 24px;
+    margin-bottom: 6px;
 }
 
 .year-month-labels span {
-    font-size: 12px;
-    color: #8b949e;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-dim);
     white-space: nowrap;
 }
 
-
-/* =====================================================
-   CALENDAR
-   ===================================================== */
-
-.year-calendar {
+.year-calendar, .calendar {
     display: flex;
     min-width: max-content;
 }
 
-
-/* =====================================================
-   WEEKDAY LABELS
-   ===================================================== */
-
-.year-weekdays {
+.year-weekdays, .weekday-labels {
     width: 45px;
-
     display: flex;
     flex-direction: column;
-
     gap: 4px;
-
     flex-shrink: 0;
-
     margin-right: 4px;
 }
 
-.year-weekdays span {
+.year-weekdays span, .weekday-labels span {
     height: 20px;
-
     display: flex;
     align-items: center;
-
-    font-size: 11px;
-    color: #8b949e;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-dim);
 }
 
-
-/* =====================================================
-   ALL WEEKS
-   ===================================================== */
-
-.year-weeks {
+.year-weeks, .weeks {
     display: flex;
     gap: 4px;
 }
 
-
-/* =====================================================
-   SINGLE WEEK
-   ===================================================== */
-
-.year-week {
+.year-week, .week {
     display: flex;
     flex-direction: column;
     gap: 4px;
-
     flex-shrink: 0;
 }
 
-
-/* =====================================================
-   DAY BOX
-   ===================================================== */
-
-.year-week .day-box {
+.day-box {
     width: 20px;
     height: 20px;
-
     box-sizing: border-box;
-
     border-radius: 4px;
-
-    background: #21262d;
-
-    border: 1px solid #30363d;
-
+    background: #111726;
+    border: 1px solid rgba(255, 255, 255, 0.05);
     cursor: pointer;
-
-    transition:
-        transform 0.1s ease,
-        border-color 0.1s ease;
+    transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s, border-color 0.15s;
 }
 
+.day-box:hover {
+    transform: scale(1.22);
+    z-index: 10;
+    border-color: rgba(255, 255, 255, 0.4);
+}
 
-/* =====================================================
-   COMPLETED DAY
-   ===================================================== */
-
-.year-week .day-box.done {
+.day-box.done {
     background: var(--habit-color);
-
     border-color: var(--habit-color);
+    box-shadow: 0 0 8px var(--habit-color);
 }
 
-
-/* =====================================================
-   EMPTY / OTHER PERIOD DAY
-   ===================================================== */
-
-.day-box.other-year,
-.day-box.other-month {
-    background: #0d1117;
-
-    border: 1px solid #21262d;
-
-    opacity: 0.35;
-}
-
-.day-box.other-year:hover,
-.day-box.other-month:hover {
-    opacity: 0.8;
-}
-
-.year-week .day-box.empty,
-.day-box.empty {
-    background: #0d1117;
-
-    border: 1px solid #21262d;
-
-    opacity: 0.25;
-
-    cursor: default;
-}
-
-
-/* =====================================================
-   TODAY
-   ===================================================== */
-
-.year-week .day-box.today {
+.day-box.today {
     outline: 2px solid #ffffff;
     outline-offset: 1px;
 }
 
-
-/* =====================================================
-   HOVER
-   ===================================================== */
-
-.year-week .day-box:not(.empty):hover {
-    transform: scale(1.15);
-
-    border-color: #ffffff;
+.day-box.other-year,
+.day-box.other-month {
+    background: #090d16;
+    border-color: rgba(255, 255, 255, 0.03);
+    opacity: 0.35;
 }
 
+.day-box.empty {
+    background: #090d16;
+    border-color: rgba(255, 255, 255, 0.03);
+    opacity: 0.25;
+    cursor: default;
+}
 
 /* =====================================================
-   MOBILE
+   STATISTICS
    ===================================================== */
 
-@media (max-width: 700px) {
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 28px;
+}
 
-    .year-navigation {
-        align-items: flex-start;
+.stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 22px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    backdrop-filter: blur(12px);
+    transition: var(--transition);
+}
+
+.stat-card:hover {
+    border-color: var(--card-border-hover);
+    transform: translateY(-2px);
+}
+
+.stat-icon-wrapper {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.stat-content strong {
+    display: block;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.stat-content p {
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+/* =====================================================
+   EMPTY STATE
+   ===================================================== */
+
+.empty {
+    color: var(--text-muted);
+    text-align: center;
+    padding: 32px 20px;
+    font-size: 14px;
+}
+
+/* =====================================================
+   MODAL
+   ===================================================== */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 6, 12, 0.8);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.hidden {
+    display: none;
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 420px;
+    background: #0d121f;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
+    animation: scaleUp 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.modal-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    transition: var(--transition);
+}
+
+.close-btn:hover {
+    color: var(--text-main);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    font-size: 14px;
+    outline: none;
+    transition: var(--transition);
+}
+
+.form-group input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+.color-options {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.color-option {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background: var(--habit-color);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.color-option.selected {
+    border-color: #ffffff;
+    transform: scale(1.15);
+    box-shadow: 0 0 12px var(--habit-color);
+}
+
+.save-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 15px;
+    margin-top: 10px;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    transition: var(--transition);
+}
+
+.save-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 768px) {
+    .app {
+        width: 94%;
+        margin-top: 24px;
+    }
+
+    .header {
         flex-direction: column;
-        gap: 12px;
+        align-items: flex-start;
+        gap: 14px;
     }
 
-    .graph-card {
-        padding: 18px;
+    .today-habits {
+        grid-template-columns: 1fr;
     }
 
-    .year-navigation h2 {
-        font-size: 24px;
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
     }
 
+    .progress-container {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        gap: 14px;
+    }
 }
