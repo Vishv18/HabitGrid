@@ -506,7 +506,9 @@ function saveHabit() {
     }
 
 
+    // =============================================
     // EDIT EXISTING HABIT
+    // =============================================
 
     if (editingHabitId) {
 
@@ -518,7 +520,7 @@ function saveHabit() {
 
         if (habit) {
 
-            // Keep completion history
+            // Keep existing completion history
 
             habit.name = name;
 
@@ -529,7 +531,9 @@ function saveHabit() {
     }
 
 
+    // =============================================
     // ADD NEW HABIT
+    // =============================================
 
     else {
 
@@ -636,69 +640,19 @@ function removeHabit(id) {
 
 
 // =====================================================
-// YEAR GRAPH STATE
+// GRAPH MONTH
 // =====================================================
 
-// Start with the current year
-
-let graphYear =
-    new Date().getFullYear();
-
-
 // =====================================================
-// GET YEAR START
+// GRAPH VIEW STATE
 // =====================================================
 
-function getYearStart(year) {
-
-    return new Date(
-        year,
-        0,
-        1
-    );
-
-}
+let graphDate = new Date();
+let viewMode = "year"; // "year" or "month"
 
 
 // =====================================================
-// GET YEAR END
-// =====================================================
-
-function getYearEnd(year) {
-
-    return new Date(
-        year,
-        11,
-        31
-    );
-
-}
-
-
-// =====================================================
-// MONDAY-BASED DAY INDEX
-// =====================================================
-
-function getMondayIndex(date) {
-
-    const day =
-        date.getDay();
-
-    // JavaScript:
-    // Sunday = 0
-    // Monday = 1
-    // ...
-    // Saturday = 6
-
-    return day === 0
-        ? 6
-        : day - 1;
-
-}
-
-
-// =====================================================
-// RENDER YEAR CALENDAR
+// HABIT GRAPH
 // =====================================================
 
 function renderHabitGraphs() {
@@ -711,9 +665,9 @@ function renderHabitGraphs() {
     container.innerHTML = "";
 
 
-    // =================================================
+    // ---------------------------------------------
     // NO HABITS
-    // =================================================
+    // ---------------------------------------------
 
     if (habits.length === 0) {
 
@@ -727,35 +681,64 @@ function renderHabitGraphs() {
 
     }
 
+    if (viewMode === "year") {
+        renderYearHabitGraphs(container);
+    } else {
+        renderMonthHabitGraphs(container);
+    }
 
-    // =================================================
-    // YEAR NAVIGATION
-    // =================================================
+}
 
-    const navigation =
-        document.createElement("div");
 
-    navigation.className =
-        "year-navigation";
+// =====================================================
+// FULL YEAR HABIT GRAPH
+// =====================================================
 
+function renderYearHabitGraphs(container) {
+
+    const year = graphDate.getFullYear();
+    const todayKey = getTodayKey();
+
+
+    // ---------------------------------------------
+    // YEAR NAVIGATION & VIEW TOGGLE
+    // ---------------------------------------------
+
+    const navigation = document.createElement("div");
+    navigation.className = "year-navigation";
 
     navigation.innerHTML = `
-        <h2>
-            ${graphYear}
-        </h2>
+        <div class="year-nav-left">
+            <h2>${year} Activity</h2>
+
+            <div class="view-toggle">
+                <button
+                    class="month-btn active"
+                    id="viewYearBtn"
+                >
+                    Full Year
+                </button>
+
+                <button
+                    class="month-btn"
+                    id="viewMonthBtn"
+                >
+                    Month View
+                </button>
+            </div>
+        </div>
 
         <div class="year-buttons">
-
             <button
                 class="month-btn"
                 id="previousYear"
             >
-                ←
+                ← ${year - 1}
             </button>
 
             <button
                 class="month-btn"
-                id="currentYear"
+                id="todayYear"
             >
                 Current Year
             </button>
@@ -764,556 +747,418 @@ function renderHabitGraphs() {
                 class="month-btn"
                 id="nextYear"
             >
-                →
+                ${year + 1} →
             </button>
-
         </div>
     `;
 
-
-    container.appendChild(
-        navigation
-    );
+    container.appendChild(navigation);
 
 
-    // =================================================
-    // PREVIOUS YEAR
-    // =================================================
+    // ---------------------------------------------
+    // NAVIGATION LISTENERS
+    // ---------------------------------------------
 
     document
         .getElementById("previousYear")
-        .addEventListener(
-            "click",
-            () => {
-
-                graphYear--;
-
-                renderHabitGraphs();
-
-            }
-        );
-
-
-    // =================================================
-    // NEXT YEAR
-    // =================================================
+        .addEventListener("click", () => {
+            graphDate = new Date(year - 1, graphDate.getMonth(), 1);
+            renderHabitGraphs();
+        });
 
     document
         .getElementById("nextYear")
-        .addEventListener(
-            "click",
-            () => {
-
-                graphYear++;
-
-                renderHabitGraphs();
-
-            }
-        );
-
-
-    // =================================================
-    // CURRENT YEAR
-    // =================================================
+        .addEventListener("click", () => {
+            graphDate = new Date(year + 1, graphDate.getMonth(), 1);
+            renderHabitGraphs();
+        });
 
     document
-        .getElementById("currentYear")
-        .addEventListener(
-            "click",
-            () => {
+        .getElementById("todayYear")
+        .addEventListener("click", () => {
+            graphDate = new Date();
+            renderHabitGraphs();
+        });
 
-                graphYear =
-                    new Date().getFullYear();
+    document
+        .getElementById("viewYearBtn")
+        .addEventListener("click", () => {
+            viewMode = "year";
+            renderHabitGraphs();
+        });
 
-                renderHabitGraphs();
-
-            }
-        );
-
-
-    // =================================================
-    // YEAR INFORMATION
-    // =================================================
-
-    const yearStart =
-        getYearStart(graphYear);
-
-    const yearEnd =
-        getYearEnd(graphYear);
+    document
+        .getElementById("viewMonthBtn")
+        .addEventListener("click", () => {
+            viewMode = "month";
+            renderHabitGraphs();
+        });
 
 
-    const startingDay =
-        getMondayIndex(yearStart);
+    // ---------------------------------------------
+    // YEAR CALENDAR COMPUTATION
+    // ---------------------------------------------
 
-    const endingDay =
-        getMondayIndex(yearEnd);
+    const jan1 = new Date(year, 0, 1);
+    let jan1Day = jan1.getDay(); // 0 = Sun, 1 = Mon ... 6 = Sat
+    let startingDay = jan1Day === 0 ? 6 : jan1Day - 1; // 0 = Mon, 1 = Tue ... 6 = Sun
 
+    const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+    const totalDaysInYear = isLeapYear ? 366 : 365;
 
-    // Number of days in year
+    const totalCells = startingDay + totalDaysInYear;
+    const numberOfWeeks = Math.ceil(totalCells / 7);
 
-    const daysInYear =
-        (
-            new Date(
-                graphYear,
-                11,
-                31
-            ) -
-            new Date(
-                graphYear,
-                0,
-                1
-            )
-        ) /
-        (
-            1000 *
-            60 *
-            60 *
-            24
-        ) + 1;
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthColumns = [];
+
+    for (let m = 0; m < 12; m++) {
+        const firstOfMonth = new Date(year, m, 1);
+        const diffTime = firstOfMonth - jan1;
+        const dayOfYearIndex = Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        const cellIndex = dayOfYearIndex - 1 + startingDay;
+        const weekCol = Math.floor(cellIndex / 7);
+        monthColumns.push({ name: monthNames[m], col: weekCol + 2 });
+    }
 
 
-    // =================================================
-    // NUMBER OF WEEKS
-    // =================================================
-
-    const totalCells =
-        startingDay +
-        daysInYear;
-
-
-    const numberOfWeeks =
-        Math.ceil(
-            totalCells / 7
-        );
-
-
-    // =================================================
-    // CREATE GRAPH FOR EACH HABIT
-    // =================================================
+    // ---------------------------------------------
+    // HABIT GRAPHS FOR EACH HABIT
+    // ---------------------------------------------
 
     habits.forEach(habit => {
 
-        const card =
-            document.createElement("div");
+        const card = document.createElement("div");
+        card.className = "graph-card";
 
-        card.className =
-            "graph-card";
+        let monthLabelsHTML = `<div class="year-month-labels" style="grid-template-columns: 45px repeat(${numberOfWeeks}, 20px);"><span></span>`;
+        monthColumns.forEach(mc => {
+            monthLabelsHTML += `<span style="grid-column: ${mc.col}">${mc.name}</span>`;
+        });
+        monthLabelsHTML += `</div>`;
 
+        card.innerHTML = `
+            <div class="graph-title">
+                <div
+                    class="habit-color"
+                    style="background:${habit.color}"
+                ></div>
 
-        // =================================================
-        // HABIT TITLE
-        // =================================================
+                <strong>
+                    ${escapeHTML(habit.name)}
+                </strong>
+            </div>
 
-        const title =
-            document.createElement("div");
+            <div class="year-graph-wrapper">
+                ${monthLabelsHTML}
 
-        title.className =
-            "graph-title";
+                <div class="year-calendar">
+                    <div class="year-weekdays">
+                        <span>Mon</span>
+                        <span>Tue</span>
+                        <span>Wed</span>
+                        <span>Thu</span>
+                        <span>Fri</span>
+                        <span>Sat</span>
+                        <span>Sun</span>
+                    </div>
 
-        title.innerHTML = `
-            <div
-                class="habit-color"
-                style="background:${habit.color}"
-            ></div>
-
-            <strong>
-                ${escapeHTML(habit.name)}
-            </strong>
+                    <div
+                        class="year-weeks"
+                        id="weeks-${habit.id}"
+                    ></div>
+                </div>
+            </div>
         `;
 
+        container.appendChild(card);
 
-        card.appendChild(title);
+        const weeksContainer = document.getElementById(`weeks-${habit.id}`);
 
+        for (let week = 0; week < numberOfWeeks; week++) {
 
-        // =================================================
-        // GRAPH WRAPPER
-        // =================================================
+            const weekColumn = document.createElement("div");
+            weekColumn.className = "year-week";
 
-        const wrapper =
-            document.createElement("div");
+            for (let weekday = 0; weekday < 7; weekday++) {
 
-        wrapper.className =
-            "year-graph-wrapper";
+                const cellIndex = week * 7 + weekday;
+                const dateObj = new Date(year, 0, cellIndex - startingDay + 1);
+                const dateKey = formatDateKey(dateObj);
 
+                const box = document.createElement("div");
+                box.className = "day-box";
+                box.style.setProperty("--habit-color", habit.color);
 
-        // =================================================
-        // MONTH LABELS
-        // =================================================
-
-        const monthLabels =
-            document.createElement("div");
-
-        monthLabels.className =
-            "year-month-labels";
-
-
-        // Empty space for weekday labels
-
-        const emptyLabel =
-            document.createElement("div");
-
-        emptyLabel.className =
-            "weekday-spacer";
-
-        monthLabels.appendChild(
-            emptyLabel
-        );
-
-
-        // Create month positions
-
-        for (
-            let month = 0;
-            month < 12;
-            month++
-        ) {
-
-            const firstOfMonth =
-                new Date(
-                    graphYear,
-                    month,
-                    1
-                );
-
-
-            const dayOfYear =
-                Math.floor(
-                    (
-                        firstOfMonth -
-                        yearStart
-                    ) /
-                    (
-                        1000 *
-                        60 *
-                        60 *
-                        24
-                    )
-                );
-
-
-            const weekIndex =
-                Math.floor(
-                    (
-                        startingDay +
-                        dayOfYear
-                    ) / 7
-                );
-
-
-            const label =
-                document.createElement(
-                    "span"
-                );
-
-            label.textContent =
-                firstOfMonth.toLocaleDateString(
-                    "en-IN",
-                    {
-                        month: "short"
-                    }
-                );
-
-
-            label.style.gridColumn =
-                `${weekIndex + 2}`;
-
-
-            monthLabels.appendChild(
-                label
-            );
-
-        }
-
-
-        wrapper.appendChild(
-            monthLabels
-        );
-
-
-        // =================================================
-        // CALENDAR BODY
-        // =================================================
-
-        const calendar =
-            document.createElement("div");
-
-        calendar.className =
-            "year-calendar";
-
-
-        // =================================================
-        // WEEKDAY LABELS
-        // =================================================
-
-        const weekdays =
-            document.createElement("div");
-
-        weekdays.className =
-            "year-weekdays";
-
-
-        const weekdayNames = [
-            "Mon",
-            "Tue",
-            "Wed",
-            "Thu",
-            "Fri",
-            "Sat",
-            "Sun"
-        ];
-
-
-        weekdayNames.forEach(
-            name => {
-
-                const label =
-                    document.createElement(
-                        "span"
-                    );
-
-                label.textContent =
-                    name;
-
-                weekdays.appendChild(
-                    label
-                );
-
-            }
-        );
-
-
-        calendar.appendChild(
-            weekdays
-        );
-
-
-        // =================================================
-        // WEEK CONTAINER
-        // =================================================
-
-        const weeks =
-            document.createElement(
-                "div"
-            );
-
-        weeks.className =
-            "year-weeks";
-
-
-        // =================================================
-        // CREATE EVERY WEEK
-        // =================================================
-
-        for (
-            let week = 0;
-            week < numberOfWeeks;
-            week++
-        ) {
-
-            const weekColumn =
-                document.createElement(
-                    "div"
-                );
-
-            weekColumn.className =
-                "year-week";
-
-
-            // =================================================
-            // CREATE 7 DAYS
-            // =================================================
-
-            for (
-                let weekday = 0;
-                weekday < 7;
-                weekday++
-            ) {
-
-                const cellIndex =
-                    week * 7 +
-                    weekday;
-
-
-                const dayOffset =
-                    cellIndex -
-                    startingDay;
-
-
-                const box =
-                    document.createElement(
-                        "div"
-                    );
-
-                box.className =
-                    "day-box";
-
-
-                box.style.setProperty(
-                    "--habit-color",
-                    habit.color
-                );
-
-
-                // =================================================
-                // CHECK IF VALID DATE
-                // =================================================
-
-                if (
-                    dayOffset < 0 ||
-                    dayOffset >= daysInYear
-                ) {
-
-                    box.classList.add(
-                        "empty"
-                    );
-
-                    weekColumn.appendChild(
-                        box
-                    );
-
-                    continue;
-
+                if (dateObj.getFullYear() !== year) {
+                    box.classList.add("other-year");
                 }
 
-
-                // =================================================
-                // CREATE DATE
-                // =================================================
-
-                const currentDate =
-                    new Date(
-                        graphYear,
-                        0,
-                        1
-                    );
-
-
-                currentDate.setDate(
-                    currentDate.getDate() +
-                    dayOffset
-                );
-
-
-                const dateKey =
-                    formatDateKey(
-                        currentDate
-                    );
-
-
-                // =================================================
-                // COMPLETED
-                // =================================================
-
-                if (
-                    habit.completed[dateKey]
-                    === true
-                ) {
-
-                    box.classList.add(
-                        "done"
-                    );
-
+                if (habit.completed[dateKey] === true) {
+                    box.classList.add("done");
                 }
 
-
-                // =================================================
-                // TODAY INDICATOR
-                // =================================================
-
-                const today =
-                    new Date();
-
-
-                if (
-                    currentDate.getFullYear() ===
-                    today.getFullYear() &&
-                    currentDate.getMonth() ===
-                    today.getMonth() &&
-                    currentDate.getDate() ===
-                    today.getDate()
-                ) {
-
-                    box.classList.add(
-                        "today"
-                    );
-
+                if (dateKey === todayKey) {
+                    box.classList.add("today");
                 }
 
+                const formattedDateStr = dateObj.toLocaleDateString("en-IN", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric"
+                });
 
-                // =================================================
-                // TOOLTIP
-                // =================================================
+                const statusStr = habit.completed[dateKey] ? "Completed" : "Not completed";
+                box.title = `${habit.name}: ${formattedDateStr} (${statusStr})`;
 
-                const readableDate =
-                    currentDate.toLocaleDateString(
-                        "en-IN",
-                        {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric"
-                        }
-                    );
+                box.addEventListener("click", () => {
+                    habit.completed[dateKey] = !habit.completed[dateKey];
+                    saveData();
+                    renderAll();
+                });
 
-
-                box.title =
-                    `${habit.name} — ${readableDate}`;
-
-
-                // =================================================
-                // CLICK DATE
-                // =================================================
-
-                box.addEventListener(
-                    "click",
-                    () => {
-
-                        habit.completed[dateKey] =
-                            !habit.completed[dateKey];
-
-                        saveData();
-
-                        renderAll();
-
-                    }
-                );
-
-
-                weekColumn.appendChild(
-                    box
-                );
+                weekColumn.appendChild(box);
 
             }
 
-
-            weeks.appendChild(
-                weekColumn
-            );
+            weeksContainer.appendChild(weekColumn);
 
         }
 
+    });
 
-        calendar.appendChild(
-            weeks
-        );
+    // Auto scroll current year graph to today's date
+    if (year === new Date().getFullYear()) {
+        setTimeout(() => {
+            const wrappers = container.querySelectorAll(".year-graph-wrapper");
+            wrappers.forEach(wrapper => {
+                const todayBox = wrapper.querySelector(".day-box.today");
+                if (todayBox) {
+                    const boxOffset = todayBox.offsetLeft;
+                    const wrapperWidth = wrapper.clientWidth;
+                    wrapper.scrollLeft = Math.max(0, boxOffset - wrapperWidth / 2 + 10);
+                }
+            });
+        }, 0);
+    }
+
+}
 
 
-        wrapper.appendChild(
-            calendar
-        );
+// =====================================================
+// SINGLE MONTH HABIT GRAPH
+// =====================================================
+
+function renderMonthHabitGraphs(container) {
+
+    const year = graphDate.getFullYear();
+    const month = graphDate.getMonth();
+
+    const monthName = graphDate.toLocaleDateString("en-IN", {
+        month: "long",
+        year: "numeric"
+    });
 
 
-        card.appendChild(
-            wrapper
-        );
+    // ---------------------------------------------
+    // MONTH NAVIGATION & VIEW TOGGLE
+    // ---------------------------------------------
+
+    const navigation = document.createElement("div");
+    navigation.className = "year-navigation";
+
+    navigation.innerHTML = `
+        <div class="year-nav-left">
+            <h2>${monthName}</h2>
+
+            <div class="view-toggle">
+                <button
+                    class="month-btn"
+                    id="viewYearBtn"
+                >
+                    Full Year
+                </button>
+
+                <button
+                    class="month-btn active"
+                    id="viewMonthBtn"
+                >
+                    Month View
+                </button>
+            </div>
+        </div>
+
+        <div class="month-buttons">
+            <button
+                class="month-btn"
+                id="previousMonth"
+            >
+                ←
+            </button>
+
+            <button
+                class="month-btn"
+                id="todayMonth"
+            >
+                Today
+            </button>
+
+            <button
+                class="month-btn"
+                id="nextMonth"
+            >
+                →
+            </button>
+        </div>
+    `;
+
+    container.appendChild(navigation);
 
 
-        container.appendChild(
-            card
-        );
+    // ---------------------------------------------
+    // NAVIGATION LISTENERS
+    // ---------------------------------------------
+
+    document.getElementById("previousMonth").addEventListener("click", () => {
+        graphDate = new Date(year, month - 1, 1);
+        renderHabitGraphs();
+    });
+
+    document.getElementById("nextMonth").addEventListener("click", () => {
+        graphDate = new Date(year, month + 1, 1);
+        renderHabitGraphs();
+    });
+
+    document.getElementById("todayMonth").addEventListener("click", () => {
+        graphDate = new Date();
+        renderHabitGraphs();
+    });
+
+    document.getElementById("viewYearBtn").addEventListener("click", () => {
+        viewMode = "year";
+        renderHabitGraphs();
+    });
+
+    document.getElementById("viewMonthBtn").addEventListener("click", () => {
+        viewMode = "month";
+        renderHabitGraphs();
+    });
+
+
+    // ---------------------------------------------
+    // DAYS IN MONTH
+    // ---------------------------------------------
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDay = new Date(year, month, 1);
+
+    let startingDay = firstDay.getDay();
+    startingDay = startingDay === 0 ? 6 : startingDay - 1;
+
+
+    // ---------------------------------------------
+    // HABIT GRAPHS
+    // ---------------------------------------------
+
+    habits.forEach(habit => {
+
+        const card = document.createElement("div");
+        card.className = "graph-card";
+
+        card.innerHTML = `
+            <div class="graph-title">
+                <div
+                    class="habit-color"
+                    style="background:${habit.color}"
+                ></div>
+
+                <strong>
+                    ${escapeHTML(habit.name)}
+                </strong>
+            </div>
+
+            <div class="graph-wrapper">
+                <div class="calendar">
+                    <div class="weekday-labels">
+                        <span>Mon</span>
+                        <span>Tue</span>
+                        <span>Wed</span>
+                        <span>Thu</span>
+                        <span>Fri</span>
+                        <span>Sat</span>
+                        <span>Sun</span>
+                    </div>
+
+                    <div
+                        class="weeks"
+                        id="weeks-${habit.id}"
+                    ></div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+
+        const weeks = document.getElementById(`weeks-${habit.id}`);
+        if (!weeks) return;
+
+        const totalCells = startingDay + daysInMonth;
+        const numberOfWeeks = Math.ceil(totalCells / 7);
+
+        for (let week = 0; week < numberOfWeeks; week++) {
+
+            const weekColumn = document.createElement("div");
+            weekColumn.className = "week";
+
+            for (let weekday = 0; weekday < 7; weekday++) {
+
+                const cellIndex = week * 7 + weekday;
+                const day = cellIndex - startingDay + 1;
+                const dateObj = new Date(year, month, day);
+                const dateKey = formatDateKey(dateObj);
+
+                const box = document.createElement("div");
+                box.className = "day-box";
+                box.style.setProperty("--habit-color", habit.color);
+
+                if (dateObj.getMonth() !== month) {
+                    box.classList.add("other-month");
+                }
+
+                if (habit.completed[dateKey] === true) {
+                    box.classList.add("done");
+                }
+
+                if (dateKey === getTodayKey()) {
+                    box.classList.add("today");
+                }
+
+                const formattedDateStr = dateObj.toLocaleDateString("en-IN", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric"
+                });
+
+                box.title = `${habit.name}: ${formattedDateStr}`;
+
+                box.addEventListener("click", () => {
+                    habit.completed[dateKey] = !habit.completed[dateKey];
+                    saveData();
+                    renderAll();
+                });
+
+                weekColumn.appendChild(box);
+
+            }
+
+            weeks.appendChild(weekColumn);
+
+        }
 
     });
 
 }
+
 
 
 // =====================================================
@@ -1345,6 +1190,10 @@ function updateStatistics() {
     }
 
 
+    // =================================================
+    // COMPLETION STATISTICS
+    // =================================================
+
     let totalCompleted = 0;
 
     let totalPossible = 0;
@@ -1352,13 +1201,25 @@ function updateStatistics() {
 
     habits.forEach(habit => {
 
-        Object.values(
-            habit.completed
-        ).forEach(done => {
+        const recordedDates =
+            Object.keys(
+                habit.completed
+            );
 
-            totalPossible++;
 
-            if (done) {
+        // Each recorded date represents
+        // one possible habit completion.
+
+        totalPossible +=
+            recordedDates.length;
+
+
+        recordedDates.forEach(dateKey => {
+
+            if (
+                habit.completed[dateKey]
+                === true
+            ) {
 
                 totalCompleted++;
 
@@ -1441,108 +1302,151 @@ function updateStatistics() {
         currentStreak;
 
 
-   // =================================================
-// LONGEST STREAK
-// =================================================
+    // =================================================
+    // LONGEST STREAK
+    // =================================================
 
-let longestStreak = 0;
-let runningStreak = 0;
+    let longestStreak = 0;
 
-// Collect all dates where every habit was completed
-const completedDates = new Set();
+    let runningStreak = 0;
 
-habits.forEach(habit => {
 
-    Object.keys(habit.completed).forEach(dateKey => {
+    // Store dates where ALL habits
+    // were completed.
 
-        if (habit.completed[dateKey] === true) {
+    const completedDates =
+        new Set();
 
-            const allHabitsDone =
-                habits.every(
-                    otherHabit =>
-                        otherHabit.completed[dateKey] === true
-                );
 
-            if (allHabitsDone) {
-                completedDates.add(dateKey);
+    habits.forEach(habit => {
+
+        Object.keys(
+            habit.completed
+        ).forEach(dateKey => {
+
+            if (
+                habit.completed[dateKey]
+                === true
+            ) {
+
+                const allHabitsDone =
+                    habits.every(
+                        otherHabit =>
+                            otherHabit.completed[dateKey]
+                            === true
+                    );
+
+
+                if (allHabitsDone) {
+
+                    completedDates.add(
+                        dateKey
+                    );
+
+                }
+
             }
 
-        }
+        });
 
     });
 
-});
+
+    // Sort dates chronologically
+
+    const sortedDates =
+        Array.from(
+            completedDates
+        ).sort();
 
 
-// Sort all completed dates
-const sortedDates =
-    Array.from(completedDates).sort();
+    // Find longest consecutive sequence
 
+    for (
+        let i = 0;
+        i < sortedDates.length;
+        i++
+    ) {
 
-// Find the longest consecutive sequence
-for (let i = 0; i < sortedDates.length; i++) {
-
-    if (i === 0) {
-
-        runningStreak = 1;
-
-    }
-    else {
-
-        const previousDate =
-            new Date(sortedDates[i - 1]);
-
-        const currentDate =
-            new Date(sortedDates[i]);
-
-        const difference =
-            Math.round(
-                (
-                    currentDate -
-                    previousDate
-                ) /
-                (
-                    1000 *
-                    60 *
-                    60 *
-                    24
-                )
-            );
-
-        if (difference === 1) {
-
-            runningStreak++;
-
-        }
-        else {
+        if (i === 0) {
 
             runningStreak = 1;
 
         }
+        else {
+
+            const previousDate =
+                new Date(
+                    sortedDates[i - 1]
+                );
+
+            const currentDate =
+                new Date(
+                    sortedDates[i]
+                );
+
+
+            const difference =
+                Math.round(
+                    (
+                        currentDate -
+                        previousDate
+                    ) /
+                    (
+                        1000 *
+                        60 *
+                        60 *
+                        24
+                    )
+                );
+
+
+            if (difference === 1) {
+
+                runningStreak++;
+
+            }
+            else {
+
+                runningStreak = 1;
+
+            }
+
+        }
+
+
+        if (
+            runningStreak >
+            longestStreak
+        ) {
+
+            longestStreak =
+                runningStreak;
+
+        }
 
     }
 
-    if (runningStreak > longestStreak) {
 
-        longestStreak =
-            runningStreak;
-
-    }
-
-}
+    document.getElementById(
+        "longestStreak"
+    ).textContent =
+        longestStreak;
 
 
-document.getElementById(
-    "longestStreak"
-).textContent =
-    longestStreak;
-
+    // =================================================
+    // COMPLETION RATE
+    // =================================================
 
     document.getElementById(
         "completionRate"
     ).textContent =
         `${completionRate}%`;
 
+
+    // =================================================
+    // DAYS COMPLETED
+    // =================================================
 
     document.getElementById(
         "daysCompleted"

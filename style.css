@@ -938,7 +938,43 @@ input {
 
 .year-navigation h2 {
     margin: 0;
-    font-size: 28px;
+    font-size: 24px;
+}
+
+.year-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.view-toggle {
+    display: flex;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 2px;
+}
+
+.view-toggle .month-btn {
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    padding: 5px 12px;
+    border-radius: 4px;
+    color: #8b949e;
+    cursor: pointer;
+}
+
+.view-toggle .month-btn:hover {
+    color: #e6edf3;
+    background: transparent;
+}
+
+.view-toggle .month-btn.active {
+    background: #21262d;
+    color: #ffffff;
+    font-weight: 600;
 }
 
 .year-buttons {
@@ -1039,6 +1075,8 @@ input {
     gap: 4px;
 
     flex-shrink: 0;
+
+    margin-right: 4px;
 }
 
 .year-weekdays span {
@@ -1111,13 +1149,30 @@ input {
 
 
 /* =====================================================
-   EMPTY DAY
+   EMPTY / OTHER PERIOD DAY
    ===================================================== */
 
-.year-week .day-box.empty {
-    background: transparent;
+.day-box.other-year,
+.day-box.other-month {
+    background: #0d1117;
 
-    border-color: transparent;
+    border: 1px solid #21262d;
+
+    opacity: 0.35;
+}
+
+.day-box.other-year:hover,
+.day-box.other-month:hover {
+    opacity: 0.8;
+}
+
+.year-week .day-box.empty,
+.day-box.empty {
+    background: #0d1117;
+
+    border: 1px solid #21262d;
+
+    opacity: 0.25;
 
     cursor: default;
 }
