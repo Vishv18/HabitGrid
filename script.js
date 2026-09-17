@@ -1441,12 +1441,101 @@ function updateStatistics() {
         currentStreak;
 
 
-    // Temporary longest streak
+   // =================================================
+// LONGEST STREAK
+// =================================================
 
-    document.getElementById(
-        "longestStreak"
-    ).textContent =
-        currentStreak;
+let longestStreak = 0;
+let runningStreak = 0;
+
+// Collect all dates where every habit was completed
+const completedDates = new Set();
+
+habits.forEach(habit => {
+
+    Object.keys(habit.completed).forEach(dateKey => {
+
+        if (habit.completed[dateKey] === true) {
+
+            const allHabitsDone =
+                habits.every(
+                    otherHabit =>
+                        otherHabit.completed[dateKey] === true
+                );
+
+            if (allHabitsDone) {
+                completedDates.add(dateKey);
+            }
+
+        }
+
+    });
+
+});
+
+
+// Sort all completed dates
+const sortedDates =
+    Array.from(completedDates).sort();
+
+
+// Find the longest consecutive sequence
+for (let i = 0; i < sortedDates.length; i++) {
+
+    if (i === 0) {
+
+        runningStreak = 1;
+
+    }
+    else {
+
+        const previousDate =
+            new Date(sortedDates[i - 1]);
+
+        const currentDate =
+            new Date(sortedDates[i]);
+
+        const difference =
+            Math.round(
+                (
+                    currentDate -
+                    previousDate
+                ) /
+                (
+                    1000 *
+                    60 *
+                    60 *
+                    24
+                )
+            );
+
+        if (difference === 1) {
+
+            runningStreak++;
+
+        }
+        else {
+
+            runningStreak = 1;
+
+        }
+
+    }
+
+    if (runningStreak > longestStreak) {
+
+        longestStreak =
+            runningStreak;
+
+    }
+
+}
+
+
+document.getElementById(
+    "longestStreak"
+).textContent =
+    longestStreak;
 
 
     document.getElementById(
