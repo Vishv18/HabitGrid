@@ -436,6 +436,93 @@ function closeHabitModal() {
 
 
 // =====================================================
+// EXPORT DATA — v2
+// =====================================================
+
+function exportData() {
+
+    // Read from localStorage using the existing key
+    const storedData = localStorage.getItem("habitGridHabits");
+
+    let dataToExport = null;
+
+    if (storedData) {
+        try {
+            dataToExport = JSON.parse(storedData);
+        } catch (e) {
+            dataToExport = null;
+        }
+    }
+
+    // Fallback: use the live in-memory habits array
+    if (
+        (!dataToExport || (Array.isArray(dataToExport) && dataToExport.length === 0)) &&
+        typeof habits !== "undefined" &&
+        Array.isArray(habits) &&
+        habits.length > 0
+    ) {
+        dataToExport = habits;
+        saveData(); // persist to localStorage before exporting
+    }
+
+    // Nothing to export
+    if (!dataToExport || (Array.isArray(dataToExport) && dataToExport.length === 0)) {
+        alert("No HabitGrid data found to export.");
+        return;
+    }
+
+    // Build pretty-printed JSON string
+    const jsonString = JSON.stringify(dataToExport, null, 2);
+
+    // Build filename: HabitGrid_Backup_YYYY-MM-DD.json
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, "0");
+    const dd = String(now.getDate()).padStart(2, "0");
+    const filename = `HabitGrid_Backup_${yyyy}-${mm}-${dd}.json`;
+
+    // Try Blob URL first (works on http:// origins)
+    try {
+        const blob = new Blob([jsonString], { type: "application/json" });
+        const blobURL = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = blobURL;
+        a.download = filename;
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Revoke after a short delay so the browser can start the download
+        setTimeout(function () { URL.revokeObjectURL(blobURL); }, 1000);
+
+    } catch (blobError) {
+        // Fallback: Data URI (works everywhere including file:// origins)
+        const dataURI = "data:application/json;charset=utf-8," + encodeURIComponent(jsonString);
+
+        const a = document.createElement("a");
+        a.href = dataURI;
+        a.download = filename;
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+}
+
+// Delegated listener: attached ONCE to document, so it keeps working even if
+// #exportBtn's parent container ever gets re-rendered (innerHTML replaced),
+// which would silently detach a directly-bound listener on the old node.
+document.addEventListener("click", function (event) {
+    const target = event.target.closest("#exportBtn");
+    if (target) {
+        exportData();
+    }
+});
+
+
+// =====================================================
 // COLOR OPTIONS
 // =====================================================
 
