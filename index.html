@@ -9,7 +9,8 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -25,7 +26,8 @@
         <header class="header">
             <div class="brand">
                 <div class="brand-icon">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
                         <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
                         <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
@@ -78,13 +80,28 @@
                     <p>Configure and manage your habit routines</p>
                 </div>
 
-                <button id="addHabitBtn" class="add-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    <span>Add Habit</span>
-                </button>
+                <div class="habit-actions">
+
+                    <button id="exportBtn" class="add-btn">
+                        Export Data
+                    </button>
+
+                    <button id="importBtn" class="add-btn">
+                        Import Data
+                    </button>
+
+                    <button id="addHabitBtn" class="add-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>Add Habit</span>
+                    </button>
+
+                </div>
+
+                <input type="file" id="importFile" accept=".json" hidden>
             </div>
 
             <div id="habitList" class="habit-list"></div>

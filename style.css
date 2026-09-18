@@ -4,25 +4,25 @@
 
 :root {
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    
+
     --bg-dark: #07090e;
     --card-bg: rgba(13, 18, 30, 0.65);
     --card-bg-solid: #0d121f;
     --card-border: rgba(255, 255, 255, 0.08);
     --card-border-hover: rgba(255, 255, 255, 0.16);
-    
+
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
     --text-dim: #64748b;
-    
+
     --accent-green: #10b981;
     --accent-blue: #38bdf8;
     --accent-purple: #a855f7;
-    
+
     --radius-lg: 16px;
     --radius-md: 12px;
     --radius-sm: 8px;
-    
+
     --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -55,7 +55,8 @@ body {
     z-index: 0;
 }
 
-button, input {
+button,
+input {
     font-family: inherit;
 }
 
@@ -340,6 +341,7 @@ button, input {
 .habit-actions {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 /* Add button */
@@ -364,7 +366,8 @@ button, input {
     box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
 }
 
-.edit-btn, .remove-btn {
+.edit-btn,
+.remove-btn {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--card-border);
     color: var(--text-muted);
@@ -454,7 +457,8 @@ button, input {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.year-buttons, .month-buttons {
+.year-buttons,
+.month-buttons {
     display: flex;
     gap: 8px;
 }
@@ -505,7 +509,8 @@ button, input {
     letter-spacing: -0.01em;
 }
 
-.year-graph-wrapper, .graph-wrapper {
+.year-graph-wrapper,
+.graph-wrapper {
     width: 100%;
     overflow-x: auto;
     padding-bottom: 6px;
@@ -545,12 +550,14 @@ button, input {
     white-space: nowrap;
 }
 
-.year-calendar, .calendar {
+.year-calendar,
+.calendar {
     display: flex;
     min-width: max-content;
 }
 
-.year-weekdays, .weekday-labels {
+.year-weekdays,
+.weekday-labels {
     width: 45px;
     display: flex;
     flex-direction: column;
@@ -559,7 +566,8 @@ button, input {
     margin-right: 4px;
 }
 
-.year-weekdays span, .weekday-labels span {
+.year-weekdays span,
+.weekday-labels span {
     height: 20px;
     display: flex;
     align-items: center;
@@ -568,12 +576,14 @@ button, input {
     color: var(--text-dim);
 }
 
-.year-weeks, .weeks {
+.year-weeks,
+.weeks {
     display: flex;
     gap: 4px;
 }
 
-.year-week, .week {
+.year-week,
+.week {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -818,13 +828,25 @@ button, input {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes scaleUp {
-    from { transform: scale(0.95); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 /* =====================================================
