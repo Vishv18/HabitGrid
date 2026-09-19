@@ -400,7 +400,33 @@ input {
 }
 
 .graphs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
     margin-bottom: 20px;
+}
+
+.habit-search-input {
+    width: 220px;
+    max-width: 100%;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    font-size: 14px;
+    outline: none;
+    transition: var(--transition);
+}
+
+.habit-search-input::placeholder {
+    color: var(--text-dim);
+}
+
+.habit-search-input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
 }
 
 .year-navigation {
@@ -881,5 +907,15 @@ input {
     .section-header {
         flex-direction: column;
         gap: 14px;
+    }
+
+    .graphs-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+    }
+
+    .habit-search-input {
+        width: 100%;
     }
 }
