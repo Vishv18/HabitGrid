@@ -743,6 +743,20 @@ function removeHabit(id) {
 let graphDate = new Date();
 let viewMode = "year"; // "year" or "month"
 
+// Current search text for the Habit Activity section only.
+// This never touches the `habits` array or localStorage — it's purely
+// a display filter applied inside renderHabitGraphs().
+let habitSearchTerm = "";
+
+const habitSearchInput = document.getElementById("habitSearch");
+
+if (habitSearchInput) {
+    habitSearchInput.addEventListener("input", () => {
+        habitSearchTerm = habitSearchInput.value.trim().toLowerCase();
+        renderHabitGraphs();
+    });
+}
+
 
 // =====================================================
 // HABIT GRAPH
@@ -774,10 +788,33 @@ function renderHabitGraphs() {
 
     }
 
+
+    // ---------------------------------------------
+    // FILTER FOR DISPLAY ONLY (search box)
+    // ---------------------------------------------
+    // This only decides which habits get rendered below.
+    // It never modifies the `habits` array or localStorage.
+
+    const habitsToDisplay = habits.filter(habit =>
+        habit.name.toLowerCase().includes(habitSearchTerm)
+    );
+
+    if (habitsToDisplay.length === 0) {
+
+        container.innerHTML = `
+            <div class="card empty">
+                No habits found.
+            </div>
+        `;
+
+        return;
+
+    }
+
     if (viewMode === "year") {
-        renderYearHabitGraphs(container);
+        renderYearHabitGraphs(container, habitsToDisplay);
     } else {
-        renderMonthHabitGraphs(container);
+        renderMonthHabitGraphs(container, habitsToDisplay);
     }
 
 }
@@ -787,7 +824,7 @@ function renderHabitGraphs() {
 // FULL YEAR HABIT GRAPH
 // =====================================================
 
-function renderYearHabitGraphs(container) {
+function renderYearHabitGraphs(container, habitsToRender) {
 
     const year = graphDate.getFullYear();
     const todayKey = getTodayKey();
@@ -919,12 +956,7 @@ function renderYearHabitGraphs(container) {
     // HABIT GRAPHS FOR EACH HABIT
     // ---------------------------------------------
 
-    habits.forEach(habit => {
-
-        const card = document.createElement("div");
-        card.className = "graph-card";
-
-        let monthLabelsHTML = `<div class="year-month-labels" style="grid-template-columns: 45px repeat(${numberOfWeeks}, 20px);"><span></span>`;
+    habitsToRender.forEach(habit => {
         monthColumns.forEach(mc => {
             monthLabelsHTML += `<span style="grid-column: ${mc.col}">${mc.name}</span>`;
         });
@@ -1042,7 +1074,7 @@ function renderYearHabitGraphs(container) {
 // SINGLE MONTH HABIT GRAPH
 // =====================================================
 
-function renderMonthHabitGraphs(container) {
+function renderMonthHabitGraphs(container, habitsToRender) {
 
     const year = graphDate.getFullYear();
     const month = graphDate.getMonth();
@@ -1153,7 +1185,7 @@ function renderMonthHabitGraphs(container) {
     // HABIT GRAPHS
     // ---------------------------------------------
 
-    habits.forEach(habit => {
+    habitsToRender.forEach(habit => {
 
         const card = document.createElement("div");
         card.className = "graph-card";
