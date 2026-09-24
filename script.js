@@ -957,6 +957,10 @@ function renderYearHabitGraphs(container, habitsToRender) {
     // ---------------------------------------------
 
     habitsToRender.forEach(habit => {
+        const card = document.createElement("div");
+        card.className = "graph-card";
+
+        let monthLabelsHTML = `<div class="year-month-labels"><span></span>`;
         monthColumns.forEach(mc => {
             monthLabelsHTML += `<span style="grid-column: ${mc.col}">${mc.name}</span>`;
         });
