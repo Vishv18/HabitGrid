@@ -759,6 +759,82 @@ if (habitSearchInput) {
 
 
 // =====================================================
+// INDIVIDUAL HABIT STATS CALCULATIONS
+// =====================================================
+
+function getHabitCompletedDays(habit) {
+    if (!habit || !habit.completed) return 0;
+    let count = 0;
+    for (const dateKey in habit.completed) {
+        if (habit.completed[dateKey] === true) {
+            count++;
+        }
+    }
+    return count;
+}
+
+function getHabitCurrentStreak(habit) {
+    if (!habit || !habit.completed) return 0;
+    const today = new Date();
+    let streak = 0;
+    let i = 0;
+    while (true) {
+        const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
+        const dateKey = formatDateKey(d);
+        if (habit.completed[dateKey] === true) {
+            streak++;
+            i++;
+        } else {
+            break;
+        }
+    }
+    return streak;
+}
+
+function getHabitLongestStreak(habit) {
+    if (!habit || !habit.completed) return 0;
+    const completedDates = [];
+    for (const dateKey in habit.completed) {
+        if (habit.completed[dateKey] === true) {
+            completedDates.push(dateKey);
+        }
+    }
+    if (completedDates.length === 0) return 0;
+
+    completedDates.sort();
+
+    let maxStreak = 0;
+    let currentStreak = 0;
+    let prevDate = null;
+
+    for (let i = 0; i < completedDates.length; i++) {
+        const parts = completedDates[i].split("-").map(Number);
+        const currentDate = new Date(parts[0], parts[1] - 1, parts[2]);
+
+        if (prevDate === null) {
+            currentStreak = 1;
+        } else {
+            const diffTime = currentDate - prevDate;
+            const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+            if (diffDays === 1) {
+                currentStreak++;
+            } else if (diffDays > 1) {
+                currentStreak = 1;
+            }
+        }
+
+        if (currentStreak > maxStreak) {
+            maxStreak = currentStreak;
+        }
+
+        prevDate = currentDate;
+    }
+
+    return maxStreak;
+}
+
+
+// =====================================================
 // HABIT GRAPH
 // =====================================================
 
@@ -960,6 +1036,10 @@ function renderYearHabitGraphs(container, habitsToRender) {
         const card = document.createElement("div");
         card.className = "graph-card";
 
+        const completedDays = getHabitCompletedDays(habit);
+        const currentStreak = getHabitCurrentStreak(habit);
+        const longestStreak = getHabitLongestStreak(habit);
+
         let monthLabelsHTML = `<div class="year-month-labels"><span></span>`;
         monthColumns.forEach(mc => {
             monthLabelsHTML += `<span style="grid-column: ${mc.col}">${mc.name}</span>`;
@@ -968,14 +1048,31 @@ function renderYearHabitGraphs(container, habitsToRender) {
 
         card.innerHTML = `
             <div class="graph-title">
-                <div
-                    class="habit-color"
-                    style="background:${habit.color}"
-                ></div>
+                <div class="graph-title-left">
+                    <div
+                        class="habit-color"
+                        style="background:${habit.color}"
+                    ></div>
 
-                <strong>
-                    ${escapeHTML(habit.name)}
-                </strong>
+                    <strong>
+                        ${escapeHTML(habit.name)}
+                    </strong>
+                </div>
+
+                <div class="habit-summary-stats">
+                    <span class="habit-stat-badge">
+                        <span>Completed:</span>
+                        <strong>${completedDays} days</strong>
+                    </span>
+                    <span class="habit-stat-badge">
+                        <span>Current streak:</span>
+                        <strong>${currentStreak} days</strong>
+                    </span>
+                    <span class="habit-stat-badge">
+                        <span>Longest streak:</span>
+                        <strong>${longestStreak} days</strong>
+                    </span>
+                </div>
             </div>
 
             <div class="year-graph-wrapper">
@@ -1194,16 +1291,37 @@ function renderMonthHabitGraphs(container, habitsToRender) {
         const card = document.createElement("div");
         card.className = "graph-card";
 
+        const completedDays = getHabitCompletedDays(habit);
+        const currentStreak = getHabitCurrentStreak(habit);
+        const longestStreak = getHabitLongestStreak(habit);
+
         card.innerHTML = `
             <div class="graph-title">
-                <div
-                    class="habit-color"
-                    style="background:${habit.color}"
-                ></div>
+                <div class="graph-title-left">
+                    <div
+                        class="habit-color"
+                        style="background:${habit.color}"
+                    ></div>
 
-                <strong>
-                    ${escapeHTML(habit.name)}
-                </strong>
+                    <strong>
+                        ${escapeHTML(habit.name)}
+                    </strong>
+                </div>
+
+                <div class="habit-summary-stats">
+                    <span class="habit-stat-badge">
+                        <span>Completed:</span>
+                        <strong>${completedDays} days</strong>
+                    </span>
+                    <span class="habit-stat-badge">
+                        <span>Current streak:</span>
+                        <strong>${currentStreak} days</strong>
+                    </span>
+                    <span class="habit-stat-badge">
+                        <span>Longest streak:</span>
+                        <strong>${longestStreak} days</strong>
+                    </span>
+                </div>
             </div>
 
             <div class="graph-wrapper">

@@ -525,14 +525,41 @@ input {
 .graph-title {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: space-between;
+    gap: 16px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
-.graph-title strong {
-    font-size: 17px;
+.graph-title-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.habit-summary-stats {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.habit-stat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    padding: 5px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.habit-stat-badge strong {
+    color: var(--text-main);
     font-weight: 700;
-    letter-spacing: -0.01em;
+    font-size: 13px;
 }
 
 .year-graph-wrapper,
